@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editor termínů výuky // Administrace vyučujícího</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .editor-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-neon);
+      clip-path: var(--corner-clip-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .editor-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+      background: var(--bg-panel-alt);
+      padding: 1rem;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .editor-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+    .editor-table th, .editor-table td {
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      text-align: left;
+    }
+    .editor-table th {
+      background: rgba(255, 255, 255, 0.04);
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+    }
+    .output-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 800px) {
+      .output-grid { grid-template-columns: 1fr; }
+    }
+    .code-box {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      width: 100%;
+      height: 260px;
+      background: #05060F;
+      border: 1px solid var(--border-neon);
+      color: #39FF88;
+      padding: 0.75rem;
+      border-radius: 4px;
+      white-space: pre;
+    }
+    .validation-alert {
+      padding: 0.75rem 1rem;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      display: none;
+    }
+    .validation-alert.warn {
+      display: block;
+      background: rgba(255, 176, 0, 0.15);
+      border: 1px solid var(--status-help);
+      color: #FFDE7A;
+    }
+    .validation-alert.success {
+      display: block;
+      background: rgba(57, 255, 136, 0.15);
+      border: 1px solid var(--status-done);
+      color: #8DFFB8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="editor-container">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--track-e); letter-spacing: 2px;">TEACHER SYS // SCHEDULE CONFIG</div>
+        <h1 style="font-size: 1.8rem; font-weight: 700;">Editor termínů dokončení témat</h1>
+      </div>
+      <a class="cyber-btn" href="../index.html">← Zpět na Mapu pokroku</a>
+    </div>
+
+    <div class="editor-toolbar">
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <label class="control-label" for="input-school-year">Školní rok:</label>
+        <input type="text" id="input-school-year" class="cyber-input" style="width: 120px;" value="2026/2027">
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <label class="control-label" for="input-shift-days">Posunout vše o:</label>
+        <input type="number" id="input-shift-days" class="cyber-input" style="width: 80px;" value="7">
+        <span class="control-label">dní</span>
+        <button class="cyber-btn" id="btn-shift-dates" type="button">Posunout termíny</button>
+      </div>
+
+      <button class="cyber-btn" id="btn-new-year" type="button" style="border-color: var(--track-e);">Nový školní rok (vynulovat)</button>
+      <button class="cyber-btn active" id="btn-generate-export" type="button">Vygenerovat kód</button>
+    </div>
+
+    <div id="validation-box" class="validation-alert"></div>
+
+    <table class="editor-table">
+      <thead>
+        <tr>
+          <th>Téma (Stanice)</th>
+          <th style="color: var(--track-a); width: 180px;">Obor A</th>
+          <th style="color: var(--track-e); width: 180px;">Obor E</th>
+          <th style="color: var(--track-s); width: 180px;">Obor S</th>
+        </tr>
+      </thead>
+      <tbody id="editor-table-body">
+      </tbody>
+    </table>
+
+    <div style="background: var(--bg-panel-alt); padding: 1rem; border-radius: 4px; border: 1px solid rgba(255, 61, 203, 0.3);">
+      <h3 style="font-size: 1.1rem; color: var(--track-e); margin-bottom: 0.75rem;">Ročníkový projekt (termíny odevzdání etap)</h3>
+      <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+        <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+          <label class="control-label" for="rp-date-1">1. pololetí (specifikace a koncept):</label>
+          <input type="date" id="rp-date-1" class="cyber-input" value="2026-12-18">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+          <label class="control-label" for="rp-date-2">2. pololetí (dokončení a obhajoba):</label>
+          <input type="date" id="rp-date-2" class="cyber-input" value="2027-05-14">
+        </div>
+      </div>
+    </div>
+
+    <div class="output-grid">
+      <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="control-label" style="color: var(--track-a);">data/schedule.json</span>
+          <div style="display: flex; gap: 0.4rem;">
+            <button class="cyber-btn" id="btn-copy-json" type="button">Kopírovat</button>
+            <button class="cyber-btn" id="btn-download-json" type="button">Stáhnout</button>
+          </div>
+        </div>
+        <textarea id="output-json" class="code-box" readonly></textarea>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="control-label" style="color: var(--track-e);">data/schedule.js (zrcadlo)</span>
+          <div style="display: flex; gap: 0.4rem;">
+            <button class="cyber-btn" id="btn-copy-js" type="button">Kopírovat</button>
+            <button class="cyber-btn" id="btn-download-js" type="button">Stáhnout</button>
+          </div>
+        </div>
+        <textarea id="output-js" class="code-box" readonly></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skripty s výchozími daty -->
+  <script src="../data/map-data.js"></script>
+  <script src="../data/schedule.js"></script>
+  <script>
+    (function () {
+      var mapData = window.MAP_DATA;
+      var currentSchedule = window.SCHEDULE_DATA || {};
+      var tbody = document.getElementById('editor-table-body');
+      var valBox = document.getElementById('validation-box');
+
+      var stationIds = [
+        'vyber', 'dio-mcu', 'iot', 'vyvojove', 'plc',
+        'dio-plc', 'senzory', 'regulace', 'bezpecnost'
+      ];
+
+      function buildTable() {
+        tbody.innerHTML = '';
+        var deadlines = currentSchedule.deadlines || {};
+
+        stationIds.forEach(function (stId) {
+          var st = mapData.stations[stId];
+          if (!st) return;
+
+          var tr = document.createElement('tr');
+
+          // Název stanice
+          var tdTitle = document.createElement('td');
+          tdTitle.innerHTML = '<strong>' + st.title + '</strong> <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">' + stId + '</span>';
+          tr.appendChild(tdTitle);
+
+          // Obor A, E, S
+          ['A', 'E', 'S'].forEach(function (trk) {
+            var td = document.createElement('td');
+            var inDate = document.createElement('input');
+            inDate.type = 'date';
+            inDate.className = 'cyber-input date-input';
+            inDate.setAttribute('data-station', stId);
+            inDate.setAttribute('data-track', trk);
+
+            // Ověříme, zda je téma v trase oboru
+            var isInTrack = mapData.tracks[trk].stations.indexOf(stId) !== -1;
+            if (!isInTrack) {
+              inDate.disabled = true;
+              inDate.style.opacity = '0.3';
+              inDate.title = 'Téma není v trase oboru ' + trk;
+            } else {
+              var val = (deadlines[stId] && deadlines[stId][trk]) || '';
+              inDate.value = val;
+            }
+
+            td.appendChild(inDate);
+            tr.appendChild(td);
+          });
+
+          tbody.appendChild(tr);
+        });
+      }
+
+      function getFormDeadlines() {
+        var deadlines = {};
+        stationIds.forEach(function (stId) {
+          deadlines[stId] = { A: null, E: null, S: null };
+        });
+
+        var inputs = tbody.querySelectorAll('.date-input');
+        inputs.forEach(function (inp) {
+          var stId = inp.getAttribute('data-station');
+          var trk = inp.getAttribute('data-track');
+          if (inp.disabled) {
+            deadlines[stId][trk] = null;
+          } else {
+            deadlines[stId][trk] = inp.value ? inp.value : null;
+          }
+        });
+        return deadlines;
+      }
+
+      function validateChronology(deadlines) {
+        var warnings = [];
+        ['A', 'E', 'S'].forEach(function (trk) {
+          var stations = mapData.tracks[trk].stations;
+          var lastDate = null;
+          var lastSt = null;
+
+          stations.forEach(function (sId) {
+            var curDate = deadlines[sId] && deadlines[sId][trk];
+            if (curDate) {
+              if (lastDate && curDate < lastDate) {
+                warnings.push('Obor ' + trk + ': termín pro "' + mapData.stations[sId].title + '" (' + curDate + ') je dříve než předchozí téma "' + mapData.stations[lastSt].title + '" (' + lastDate + ').');
+              }
+              lastDate = curDate;
+              lastSt = sId;
+            }
+          });
+        });
+
+        if (warnings.length > 0) {
+          valBox.className = 'validation-alert warn';
+          valBox.innerHTML = '<strong>Varování k chronologii termínů:</strong><br>' + warnings.join('<br>');
+        } else {
+          valBox.className = 'validation-alert success';
+          valBox.innerHTML = 'Pořadí termínů v jednotlivých tratích je logicky vzestupné (OK).';
+        }
+      }
+
+      function generateExports() {
+        var deadlines = getFormDeadlines();
+        validateChronology(deadlines);
+
+        var schoolYear = document.getElementById('input-school-year').value.trim() || '2026/2027';
+        var today = new Date().toISOString().slice(0, 10);
+
+        var rp1 = document.getElementById('rp-date-1').value || '2026-12-18';
+        var rp2 = document.getElementById('rp-date-2').value || '2027-05-14';
+
+        var schedObj = {
+          schemaVersion: 1,
+          schoolYear: schoolYear,
+          updatedAt: today,
+          deadlines: deadlines,
+          extra: {
+            rocnikovy: [
+              { label: '1. pololetí (specifikace a koncept)', date: rp1 },
+              { label: '2. pololetí (dokončení a obhajoba)', date: rp2 }
+            ]
+          }
+        };
+
+        var jsonStr = JSON.stringify(schedObj, null, 2);
+        document.getElementById('output-json').value = jsonStr;
+
+        var jsStr = '/**\n * ZRCADLO SCHEDULE.JSON PRO LOKÁLNÍ OTEVŘENÍ PŘES FILE://\n * Tento soubor je generován/udržován ve shodě s schedule.json.\n */\n(function (root) {\n  \'use strict\';\n\n  var SCHEDULE_DATA = ' + jsonStr + ';\n\n  root.SCHEDULE_DATA = SCHEDULE_DATA;\n})(typeof window !== \'undefined\' ? window : global);\n';
+        document.getElementById('output-js').value = jsStr;
+      }
+
+      // Event listener: Posun o N dní
+      document.getElementById('btn-shift-dates').addEventListener('click', function () {
+        var days = parseInt(document.getElementById('input-shift-days').value, 10);
+        if (isNaN(days) || days === 0) return;
+
+        var inputs = tbody.querySelectorAll('.date-input:not([disabled])');
+        inputs.forEach(function (inp) {
+          if (inp.value) {
+            var d = new Date(inp.value + 'T00:00:00');
+            d.setDate(d.getDate() + days);
+            inp.value = d.toISOString().slice(0, 10);
+          }
+        });
+        generateExports();
+      });
+
+      // Event listener: Nový školní rok
+      document.getElementById('btn-new-year').addEventListener('click', function () {
+        if (!confirm('Opravdu chcete vyčistit všechny termíny pro nový školní rok?')) return;
+        var inputs = tbody.querySelectorAll('.date-input');
+        inputs.forEach(function (inp) { inp.value = ''; });
+        generateExports();
+      });
+
+      document.getElementById('btn-generate-export').addEventListener('click', generateExports);
+
+      // Kopírování a stahování
+      document.getElementById('btn-copy-json').addEventListener('click', function () {
+        navigator.clipboard.writeText(document.getElementById('output-json').value);
+        alert('Obsah schedule.json zkopírován do schránky.');
+      });
+      document.getElementById('btn-copy-js').addEventListener('click', function () {
+        navigator.clipboard.writeText(document.getElementById('output-js').value);
+        alert('Obsah schedule.js zkopírován do schránky.');
+      });
+
+      function downloadFile(content, fileName, mimeType) {
+        var blob = new Blob([content], { type: mimeType });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      document.getElementById('btn-download-json').addEventListener('click', function () {
+        downloadFile(document.getElementById('output-json').value, 'schedule.json', 'application/json');
+      });
+      document.getElementById('btn-download-js').addEventListener('click', function () {
+        downloadFile(document.getElementById('output-js').value, 'schedule.js', 'text/javascript');
+      });
+
+      // Inicializace
+      buildTable();
+      generateExports();
+    })();
+  </script>
+</body>
+</html>
+

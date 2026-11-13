@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interaktivní cyberpunková Mapa studentského pokroku SPŠELIT pro sledování formativního rozvoje a maturitních okruhů.">
+  <title>Mapa studentského pokroku // SPŠELIT Dobruška</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- 1. CYBERPUNK HLAVIČKA -->
+    <header class="header-cyber" role="banner">
+      <div class="header-top">
+        <div class="brand-block">
+          <span class="brand-sys" aria-hidden="true">// SYS.NAV_MATRIX.v1.0 // SPŠELIT DOBRUŠKA</span>
+          <h1 class="brand-title">Mapa studentského pokroku</h1>
+          <p class="brand-subtitle">Formativní navigační systém pro maturitní a odborná témata automatizace, elektrotechniky a mechatroniky</p>
+        </div>
+
+        <!-- Stav synchronizace termínů -->
+        <div class="schedule-sync-pill" id="schedule-sync-pill" role="status" aria-live="polite">
+          <span class="sync-dot" aria-hidden="true"></span>
+          <span id="sync-status-text">Termíny: načítám data…</span>
+        </div>
+      </div>
+
+      <!-- Řídicí panel: výběr oboru a pohledu -->
+      <nav class="controls-bar" aria-label="Filtrování oborů a přepínání zobrazení">
+        <div class="track-selector-group">
+          <span class="control-label" id="label-track-select">Můj obor:</span>
+          <div class="track-btn-group" role="group" aria-labelledby="label-track-select">
+            <button class="cyber-btn-track active" data-track="ALL" type="button" aria-pressed="true">Všechny obory</button>
+            <button class="cyber-btn-track" data-track="A" type="button" aria-pressed="false" style="color: var(--track-a);">Obor A</button>
+            <button class="cyber-btn-track" data-track="E" type="button" aria-pressed="false" style="color: var(--track-e);">Obor E</button>
+            <button class="cyber-btn-track" data-track="S" type="button" aria-pressed="false" style="color: var(--track-s);">Obor S</button>
+          </div>
+        </div>
+
+        <div class="view-controls">
+          <span class="control-label" id="label-view-select">Pohled:</span>
+          <div role="group" aria-labelledby="label-view-select">
+            <button class="cyber-btn active" id="btn-view-map" type="button" aria-pressed="true">🗺️ Metro mapa</button>
+            <button class="cyber-btn" id="btn-view-list" type="button" aria-pressed="false">📋 Seznam úloh</button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- 2. UKAZATEL POKROKU TRATI (Zobrazuje se po zvolení A, E nebo S) -->
+    <section class="track-progress-banner" id="track-progress-banner" style="display: none;" aria-live="polite">
+      <div class="progress-info">
+        <div class="progress-title" id="track-progress-title">Obor A</div>
+        <div class="progress-meta" id="track-progress-meta">Zvládnuto 0 z 8 témat</div>
+      </div>
+      <div class="progress-bar-container">
+        <div class="cyber-progress-track">
+          <div class="cyber-progress-fill" id="track-progress-fill"></div>
+        </div>
+        <span class="progress-percent" id="track-progress-pct">0%</span>
+      </div>
+    </section>
+
+    <!-- 3. HLAVNÍ PLOCHA PRO METRO MAPU A SEZNAM -->
+    <main role="main">
+      <!-- Pohled 1: Inline SVG Metro Mapa -->
+      <section class="map-viewport" id="metro-map-container" aria-label="Grafická mapa odborných témat">
+        <!-- SVG se generuje dynamicky přes js/render.js -->
+      </section>
+
+      <!-- Pohled 2: Seznamový akordeon (přístupný, pro čtečky, tisk a mobil) -->
+      <section id="stations-list-container" style="display: none;" aria-label="Textový seznam témat s podrobnostmi">
+        <!-- Generuje se dynamicky přes js/render.js -->
+      </section>
+    </main>
+
+    <!-- 4. KARTA ROČNÍKOVÝ PROJEKT (MIMO TRASY) -->
+    <aside class="extra-project-section" id="extra-project-section" aria-label="Ročníkový projekt">
+      <div class="extra-project-header">
+        <div>
+          <span style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--track-e); letter-spacing: 1.5px;">MIMO TRASY // CELOROČNÍ INŽENÝRSKÁ PRAXE</span>
+          <h2 style="font-size: 1.4rem; font-weight: 700; margin-top: 0.2rem;">Ročníkový projekt</h2>
+          <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 0.2rem;">Komplexní samostatná inženýrská práce v průběhu celého školního roku (hodnoceno bodově 0–30 b za pololetí).</p>
+        </div>
+        <button class="cyber-btn" id="btn-open-rocnikovy" type="button" style="border-color: var(--track-e); color: var(--track-e);">
+          📝 Otevřít deník projektu
+        </button>
+      </div>
+
+      <div class="extra-deadlines-bar">
+        <div class="deadline-pill">
+          <span>📅 1. pololetí (koncept a zadání):</span>
+          <strong id="rp-deadline-1" style="color: var(--text-main);">18. 12. 2026</strong>
+        </div>
+        <div class="deadline-pill">
+          <span>📅 2. pololetí (realizace a obhajoba):</span>
+          <strong id="rp-deadline-2" style="color: var(--text-main);">14. 5. 2027</strong>
+        </div>
+        <div class="deadline-pill">
+          <span>🎯 Hodnocení:</span>
+          <strong style="color: var(--status-done);">0–30 b za etapu</strong>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 5. PATIČKA APLIKACE A VOLBY SOUKROMÍ -->
+    <footer class="app-footer" role="contentinfo">
+      <div>
+        <strong>Mapa studentského pokroku SPŠELIT</strong> | Data uložena pouze ve vašem prohlížeči (localStorage).
+      </div>
+
+      <div class="footer-actions">
+        <button class="cyber-btn" id="btn-toggle-quiet-mode" type="button" title="Vypne záři, scanlines a animace pro klidné studium">
+          🍃 Klidný režim
+        </button>
+        <button class="cyber-btn" id="btn-export-data" type="button" title="Zálohovat své poznámky a hodnocení do souboru progress.json">
+          💾 Export progress.json
+        </button>
+        <button class="cyber-btn" id="btn-import-data" type="button" title="Obnovit své poznámky z dříve uloženého souboru progress.json">
+          📂 Import ze zálohy
+        </button>
+        <button class="cyber-btn" id="btn-clear-all-data" type="button" style="border-color: var(--status-danger); color: #FF99AA;" title="Smazat všechna data v tomto prohlížeči">
+          🗑️ Smazat vše
+        </button>
+        <a class="cyber-btn" href="teacher/schedule-editor.html" style="font-size: 0.75rem; opacity: 0.6;" title="Administrační editor termínů pro pedagogy">
+          ⚙️ Editor vyučujícího
+        </a>
+      </div>
+    </footer>
+
+  </div> <!-- /app-container -->
+
+  <!-- 6. MODAL & DRAWER PRO DETAIL TÉMATU -->
+  <div class="details-overlay" id="details-overlay" aria-hidden="true"></div>
+  <aside class="details-panel" id="details-drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Podrobnosti vybraného tématu">
+    <!-- Vykresluje se dynamicky přes js/render.js -->
+  </aside>
+
+  <!-- 7. BEZPEČNOSTNÍ UPOZORNĚNÍ PRO IMPORT/EXPORT (VAROVÁNÍ O SOUKROMÍ) -->
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+  <div class="modal-dialog-cyber" id="privacy-warning-modal" role="dialog" aria-modal="true" aria-labelledby="modal-priv-title">
+    <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--status-danger); letter-spacing: 1.5px;">SECURITY & PRIVACY NOTICE // GITHUB PAGES</div>
+    <h3 id="modal-priv-title" style="font-size: 1.3rem; font-weight: 700;">Důležité upozornění k soukromí</h3>
+    
+    <div class="privacy-warning-box">
+      ⚠️ <strong>Pozor při verzování na GitHubu:</strong><br>
+      Tato aplikace ukládá vaše hodnocení a poznámky výhradně lokálně ve vašem prohlížeči.<br><br>
+      Pokud exportovaný soubor <code>progress.json</code> commitnete do svého <strong>veřejného</strong> GitHub repozitáře (GitHub Free zveřejňuje Pages pouze z veřejných repozitářů), bude vaše hodnocení a veškeré osobní poznámky <strong>veřejně viditelné komukoli na internetu</strong>!
+    </div>
+
+    <p style="font-size: 0.9rem; color: var(--text-muted);">
+      Doporučujeme soubor <code>progress.json</code> ponechat pouze jako soukromou lokální zálohu na vašem počítači nebo školním disku.
+    </p>
+
+    <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem;">
+      <button class="cyber-btn" id="btn-modal-import-cancel" type="button">Zrušit</button>
+      <button class="cyber-btn active" id="btn-modal-import-proceed" type="button">Rozumím, pokračovat k výběru souboru</button>
+    </div>
+  </div>
+
+  <!-- Skrytý file input pro import -->
+  <input type="file" id="import-file-input" accept=".json,application/json" style="display: none;">
+
+  <!-- 8. NAČTENÍ JAVASCRIPTU (Klasické skripty bez modulů pro bezchybný běh z file:// i Pages) -->
+  <script src="data/map-data.js"></script>
+  <script src="data/schedule.js"></script>
+  <script src="data/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,1234 @@
+/* ==========================================================================
+   MAPA STUDENTSKÉHO POKROKU - CYBERPUNK HUD DESIGN SYSTEM
+   Statický CSS bez frameworků, WCAG 2.1 AA přístupný, plná podpora latin-ext
+   ========================================================================== */
+
+/* --- 1. TYPOGRAFIE A LOKÁLNÍ FONTY --- */
+
+/* Rajdhani - Latin & Latin-Ext */
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/rajdhani-latin-ext-400-normal.woff2') format('woff2'),
+       url('../fonts/rajdhani-latin-400-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0100-02AF, U+1E00-1EFF;
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/rajdhani-latin-ext-600-normal.woff2') format('woff2'),
+       url('../fonts/rajdhani-latin-600-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0100-02AF, U+1E00-1EFF;
+}
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/rajdhani-latin-ext-700-normal.woff2') format('woff2'),
+       url('../fonts/rajdhani-latin-700-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0100-02AF, U+1E00-1EFF;
+}
+
+/* JetBrains Mono - Latin & Latin-Ext */
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-latin-ext-400-normal.woff2') format('woff2'),
+       url('../fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0100-02AF, U+1E00-1EFF;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-latin-ext-600-normal.woff2') format('woff2'),
+       url('../fonts/jetbrains-mono-latin-600-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0100-02AF, U+1E00-1EFF;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-latin-ext-700-normal.woff2') format('woff2'),
+       url('../fonts/jetbrains-mono-latin-700-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0100-02AF, U+1E00-1EFF;
+}
+
+/* --- 2. CSS PROMĚNNÉ --- */
+:root {
+  --font-main: 'Rajdhani', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', Consolas, "Courier New", monospace;
+
+  /* Cyberpunk paleta */
+  --bg-deep: #05060F;
+  --bg-dark: #0B0D1F;
+  --bg-panel: #0F1230;
+  --bg-panel-alt: #161A42;
+  --bg-overlay: rgba(5, 6, 15, 0.85);
+
+  --text-main: #E6F1FF;
+  --text-muted: #9BB0D3;
+  --text-dim: #5C6E91;
+
+  /* Obory a akcenty */
+  --track-a: #00E5FF; /* Cyan */
+  --track-e: #FF3DCB; /* Magenta */
+  --track-s: #FCEE09; /* Acid Yellow */
+
+  --status-done: #39FF88;     /* Neon Green */
+  --status-working: #00E5FF;  /* Cyan */
+  --status-waiting: #9BB0D3;  /* Muted */
+  --status-help: #FFB000;     /* Amber */
+  --status-danger: #FF3366;   /* Red-Pink */
+
+  --border-neon: rgba(0, 229, 255, 0.3);
+  --glow-cyan: 0 0 12px rgba(0, 229, 255, 0.45);
+  --glow-magenta: 0 0 12px rgba(255, 61, 203, 0.45);
+  --glow-yellow: 0 0 12px rgba(252, 238, 9, 0.45);
+
+  --corner-clip: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  --corner-clip-lg: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+}
+
+/* Klidný režim (Quiet Mode) */
+body.quiet-mode {
+  --bg-deep: #0E111B;
+  --bg-dark: #141926;
+  --bg-panel: #1A2133;
+  --bg-panel-alt: #222B42;
+  --text-main: #F0F4FC;
+  --text-muted: #B4C2DC;
+  --text-dim: #7B8CA8;
+
+  --border-neon: #3A4766;
+  --glow-cyan: none !important;
+  --glow-magenta: none !important;
+  --glow-yellow: none !important;
+}
+
+/* --- 3. RESET A ZÁKLADNÍ PRVKY --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  background-color: var(--bg-deep);
+  color: var(--text-main);
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-main);
+  font-size: 1.05rem;
+  line-height: 1.5;
+  background-color: var(--bg-deep);
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(15, 26, 68, 0.5) 0%, transparent 70%),
+    linear-gradient(rgba(11, 13, 31, 0.95), var(--bg-deep));
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Scanlines overlay */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.12) 0px,
+    rgba(0, 0, 0, 0.12) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.75;
+}
+
+body.quiet-mode::after {
+  display: none !important;
+}
+
+/* Přístupný focus */
+:focus-visible {
+  outline: 2px solid var(--track-a);
+  outline-offset: 3px;
+}
+
+/* Odkazy */
+a {
+  color: var(--track-a);
+  text-decoration: none;
+  transition: color 0.2s, text-shadow 0.2s;
+}
+a:hover {
+  color: #fff;
+  text-shadow: var(--glow-cyan);
+}
+
+/* Tlačítka */
+button {
+  font-family: var(--font-main);
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: 1rem;
+}
+
+/* --- 4. ROZVRŽENÍ STRÁNKY --- */
+.app-container {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 1.25rem 1.5rem 4rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* Hlavička */
+.header-cyber {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-neon);
+  clip-path: var(--corner-clip-lg);
+  padding: 1.25rem 1.75rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+.header-cyber::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--track-a), var(--track-e));
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.brand-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-sys {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  color: var(--track-a);
+  text-transform: uppercase;
+}
+
+.brand-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-main);
+  text-shadow: 0 0 10px rgba(0, 229, 255, 0.35);
+  line-height: 1.1;
+}
+
+.brand-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.schedule-sync-pill {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: rgba(0, 229, 255, 0.08);
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+}
+
+.sync-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--status-done);
+  box-shadow: 0 0 8px var(--status-done);
+}
+
+/* Řídicí panel filtru oborů */
+.controls-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.track-selector-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.control-label {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+
+.track-btn-group {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.cyber-btn-track {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 0.4rem 0.9rem;
+  background: var(--bg-panel-alt);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  clip-path: var(--corner-clip);
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.cyber-btn-track[data-track="ALL"].active {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #fff;
+  color: #fff;
+}
+.cyber-btn-track[data-track="A"].active {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: var(--track-a);
+  color: var(--track-a);
+  box-shadow: var(--glow-cyan);
+}
+.cyber-btn-track[data-track="E"].active {
+  background: rgba(255, 61, 203, 0.2);
+  border-color: var(--track-e);
+  color: var(--track-e);
+  box-shadow: var(--glow-magenta);
+}
+.cyber-btn-track[data-track="S"].active {
+  background: rgba(252, 238, 9, 0.2);
+  border-color: var(--track-s);
+  color: var(--track-s);
+  box-shadow: var(--glow-yellow);
+}
+
+.view-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cyber-btn {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 0.4rem 0.8rem;
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border-neon);
+  clip-path: var(--corner-clip);
+  color: var(--text-main);
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.cyber-btn:hover {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: var(--track-a);
+  color: #fff;
+}
+.cyber-btn.active {
+  background: var(--track-a);
+  color: #05060F;
+  font-weight: 700;
+}
+
+/* Ukazatel pokroku trati */
+.track-progress-banner {
+  background: var(--bg-panel-alt);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  padding: 0.85rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  clip-path: var(--corner-clip);
+}
+
+.progress-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.progress-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.progress-meta {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.progress-bar-container {
+  flex: 1;
+  min-width: 220px;
+  max-width: 480px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cyber-progress-track {
+  flex: 1;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyber-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--track-a), var(--status-done));
+  box-shadow: 0 0 10px var(--status-done);
+  transition: width 0.4s ease-out;
+}
+
+.progress-percent {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+  min-width: 45px;
+  text-align: right;
+  color: var(--status-done);
+}
+
+/* --- 5. METRO MAPA (INLINE SVG) --- */
+.map-viewport {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-neon);
+  clip-path: var(--corner-clip-lg);
+  position: relative;
+  overflow-x: auto;
+  overflow-y: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
+  padding: 1.5rem 0.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* HUD mřížka v pozadí SVG */
+.map-viewport::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(0, 229, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+
+.metro-svg {
+  display: block;
+  min-width: 1050px;
+  width: 100%;
+  height: auto;
+  font-family: var(--font-main);
+}
+
+/* Metro linie */
+.track-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 0.3s, stroke-width 0.3s;
+}
+
+.track-line.track-a {
+  stroke: var(--track-a);
+  stroke-width: 6;
+}
+.track-line.track-e {
+  stroke: var(--track-e);
+  stroke-width: 6;
+  stroke-dasharray: 2 10; /* Tečkovaná */
+}
+.track-line.track-s {
+  stroke: var(--track-s);
+  stroke-width: 6;
+  stroke-dasharray: 12 6 2 6; /* Čerchovaná */
+}
+
+/* Pulzující proud dat na tratích */
+@keyframes dashFlow {
+  to {
+    stroke-dashoffset: -40;
+  }
+}
+.track-pulse {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.85);
+  stroke-width: 2.5;
+  stroke-dasharray: 6 34;
+  animation: dashFlow 3s linear infinite;
+  pointer-events: none;
+}
+body.quiet-mode .track-pulse,
+@media (prefers-reduced-motion: reduce) {
+  .track-pulse {
+    display: none !important;
+  }
+}
+
+/* Ztlumení neaktivních tratí při zvolení oboru */
+.metro-svg.filter-a .track-line:not(.track-a),
+.metro-svg.filter-a .track-pulse:not(.track-a) {
+  opacity: 0.15;
+}
+.metro-svg.filter-e .track-line:not(.track-e),
+.metro-svg.filter-e .track-pulse:not(.track-e) {
+  opacity: 0.15;
+}
+.metro-svg.filter-s .track-line:not(.track-s),
+.metro-svg.filter-s .track-pulse:not(.track-s) {
+  opacity: 0.15;
+}
+
+/* Stanice v SVG */
+.station-node {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.station-node:focus-visible {
+  outline: none;
+}
+.station-node:focus-visible .station-shape {
+  stroke: #fff !important;
+  stroke-width: 3px !important;
+  filter: drop-shadow(0 0 8px #fff) !important;
+}
+
+.station-shape {
+  fill: var(--bg-panel);
+  stroke: #5C6E91;
+  stroke-width: 2;
+  transition: stroke 0.2s, fill 0.2s, filter 0.2s;
+}
+.station-node:hover .station-shape {
+  stroke: var(--track-a);
+  filter: var(--glow-cyan);
+}
+
+.station-shape.status-done {
+  stroke: var(--status-done) !important;
+  fill: #082618 !important;
+}
+.station-shape.status-working {
+  stroke: var(--track-a) !important;
+  fill: #092433 !important;
+}
+.station-shape.status-help {
+  stroke: var(--status-help) !important;
+  fill: #2B1D05 !important;
+}
+
+/* Pin "Jsem tady" */
+.pin-here {
+  animation: bouncePin 1.8s infinite ease-in-out;
+  pointer-events: none;
+}
+@keyframes bouncePin {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+body.quiet-mode .pin-here,
+@media (prefers-reduced-motion: reduce) {
+  .pin-here {
+    animation: none !important;
+  }
+}
+
+/* Popisky v SVG */
+.station-title-text {
+  font-family: var(--font-main);
+  font-weight: 700;
+  font-size: 13.5px;
+  fill: var(--text-main);
+  text-anchor: middle;
+  pointer-events: none;
+}
+.station-deadline-text {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  fill: var(--text-muted);
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+/* --- 6. SEZNAMOVÝ POHLED (AKORDEON PRO MOBIL / TISK) --- */
+.stations-list-view {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  list-style: none;
+}
+
+.list-station-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-neon);
+  clip-path: var(--corner-clip);
+  transition: border-color 0.2s;
+}
+
+.list-station-header {
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.02);
+}
+.list-station-header:hover {
+  background: rgba(0, 229, 255, 0.05);
+}
+
+.list-station-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.station-badge-group {
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
+.track-badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  color: #05060F;
+}
+.track-badge.badge-a { background: var(--track-a); }
+.track-badge.badge-e { background: var(--track-e); }
+.track-badge.badge-s { background: var(--track-s); }
+
+.list-station-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.list-station-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.deadline-pill {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+}
+.deadline-pill.state-overdue {
+  color: #FFA07A;
+  border: 1px solid rgba(255, 160, 122, 0.4);
+}
+.deadline-pill.state-near {
+  color: var(--status-help);
+  border: 1px solid rgba(255, 176, 0, 0.4);
+}
+.deadline-pill.state-done {
+  color: var(--status-done);
+  border: 1px solid rgba(57, 255, 136, 0.4);
+}
+
+.repo-link-icon {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid rgba(0, 229, 255, 0.3);
+  border-radius: 3px;
+  color: var(--track-a);
+  display: inline-flex;
+  align-items: center;
+}
+.repo-link-icon:hover {
+  background: var(--track-a);
+  color: #05060F;
+}
+
+/* --- 7. POSTRANNÍ PANEL PODROBNOSTÍ (DRAWER / POPOVER) --- */
+.details-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--bg-overlay);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s, visibility 0.25s;
+}
+.details-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.details-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  max-width: 780px;
+  height: 100vh;
+  background: var(--bg-panel);
+  border-left: 2px solid var(--track-a);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.85);
+  z-index: 1001;
+  overflow-y: auto;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+.details-panel.open {
+  transform: translateX(0);
+}
+
+.details-header {
+  padding: 1.5rem;
+  background: var(--bg-panel-alt);
+  border-bottom: 1px solid var(--border-neon);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.details-header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.details-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.details-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.btn-close-drawer {
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border-neon);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-panel);
+  color: var(--text-muted);
+  clip-path: var(--corner-clip);
+  transition: all 0.2s;
+}
+.btn-close-drawer:hover {
+  border-color: var(--track-a);
+  color: #fff;
+  background: rgba(0, 229, 255, 0.15);
+}
+
+.details-tags-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.canvas-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.15rem 0.45rem;
+  border-radius: 2px;
+  color: var(--text-muted);
+}
+
+.details-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* Sekce tří otázek formativního hodnocení */
+.formative-card {
+  background: rgba(11, 13, 31, 0.7);
+  border: 1px solid rgba(0, 229, 255, 0.2);
+  clip-path: var(--corner-clip);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+}
+
+.formative-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+}
+.formative-card.q1::before { background: var(--track-a); }
+.formative-card.q2::before { background: var(--track-e); }
+.formative-card.q3::before { background: var(--status-done); }
+
+.card-question-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.formative-card.q1 .card-question-title { color: var(--track-a); }
+.formative-card.q2 .card-question-title { color: var(--track-e); }
+.formative-card.q3 .card-question-title { color: var(--status-done); }
+
+/* Otázka 1: Kam směřuji */
+.q1-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+.cyber-anchor-btn {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 0.45rem 0.85rem;
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border-neon);
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-main);
+  transition: all 0.2s;
+}
+.cyber-anchor-btn:hover {
+  background: rgba(0, 229, 255, 0.15);
+  border-color: var(--track-a);
+  color: #fff;
+}
+
+/* Otázka 2: Kde jsem - Stav a sebehodnocení */
+.status-pill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.5rem;
+}
+
+.radio-pill-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-panel-alt);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+.radio-pill-label input[type="radio"] {
+  accent-color: var(--track-a);
+}
+.radio-pill-label:hover {
+  border-color: var(--track-a);
+}
+.radio-pill-label.selected {
+  border-color: var(--track-a);
+  background: rgba(0, 229, 255, 0.15);
+  font-weight: 700;
+}
+
+/* Tabulka úloh */
+.tasks-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.cyber-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.cyber-table th,
+.cyber-table td {
+  padding: 0.65rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cyber-table th {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.task-title-cell {
+  font-weight: 600;
+  max-width: 260px;
+}
+.task-title-cell .challenge-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  background: rgba(255, 61, 203, 0.2);
+  border: 1px solid var(--track-e);
+  color: var(--track-e);
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+  margin-left: 0.4rem;
+  display: inline-block;
+}
+
+.cyber-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--status-done);
+  cursor: pointer;
+}
+
+.cyber-select,
+.cyber-input {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: var(--bg-panel-alt);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-main);
+  padding: 0.35rem 0.5rem;
+  border-radius: 3px;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+.cyber-select:focus,
+.cyber-input:focus {
+  border-color: var(--track-a);
+  outline: none;
+}
+
+.task-summary-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  background: rgba(255, 255, 255, 0.04);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  border-radius: 4px;
+}
+
+.btn-add-task {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  padding: 0.35rem 0.7rem;
+  background: rgba(0, 229, 255, 0.1);
+  border: 1px dashed var(--track-a);
+  color: var(--track-a);
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.btn-add-task:hover {
+  background: var(--track-a);
+  color: #05060F;
+}
+
+/* Otázka 3: Jak dál - Textové oblasti */
+.cyber-textarea {
+  font-family: var(--font-main);
+  font-size: 1rem;
+  width: 100%;
+  min-height: 85px;
+  background: var(--bg-panel-alt);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-main);
+  padding: 0.75rem;
+  border-radius: 4px;
+  resize: vertical;
+}
+.cyber-textarea:focus {
+  border-color: var(--status-done);
+  outline: none;
+}
+
+/* --- 8. KARTA ROČNÍKOVÝ PROJEKT --- */
+.extra-project-section {
+  background: var(--bg-panel);
+  border: 1px solid rgba(255, 61, 203, 0.35);
+  clip-path: var(--corner-clip-lg);
+  padding: 1.5rem 1.75rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+}
+
+.extra-project-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--track-e);
+}
+
+.extra-project-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.extra-deadlines-bar {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* --- 9. PATIČKA A EXPORT/IMPORT MODAL --- */
+.app-footer {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-neon);
+  clip-path: var(--corner-clip);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.footer-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.modal-dialog-cyber {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg-panel);
+  border: 2px solid var(--track-a);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+  padding: 1.75rem;
+  max-width: 520px;
+  width: 90%;
+  z-index: 2000;
+  clip-path: var(--corner-clip-lg);
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+}
+.modal-dialog-cyber.open {
+  display: flex;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 1999;
+  display: none;
+}
+.modal-backdrop.open {
+  display: block;
+}
+
+.privacy-warning-box {
+  background: rgba(255, 51, 102, 0.1);
+  border-left: 3px solid var(--status-danger);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  color: #FFB3BA;
+  line-height: 1.4;
+}
+
+/* --- 10. TISKOVÝ STYL (@media print) --- */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+  body::after,
+  .controls-bar,
+  .btn-add-task,
+  .footer-actions,
+  .app-footer {
+    display: none !important;
+  }
+  .app-container {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  .header-cyber,
+  .list-station-card,
+  .extra-project-section {
+    border: 1px solid #ccc !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    clip-path: none !important;
+    color: #000 !important;
+  }
+  .brand-title {
+    color: #000 !important;
+    text-shadow: none !important;
+  }
+  .track-progress-banner {
+    display: none !important;
+  }
+  .details-panel {
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+  }
+}
+
+/* --- 11. RESPONZIVITA (MOBIL A TABLET) --- */
+@media (max-width: 768px) {
+  .brand-title {
+    font-size: 1.6rem;
+  }
+  .details-panel {
+    max-width: 100%;
+    top: auto;
+    bottom: 0;
+    height: 88vh;
+    border-left: none;
+    border-top: 3px solid var(--track-a);
+    transform: translateY(100%);
+  }
+  .details-panel.open {
+    transform: translateY(0);
+  }
+  .cyber-table,
+  .cyber-table tbody,
+  .cyber-table tr,
+  .cyber-table td {
+    display: block;
+    width: 100%;
+  }
+  .cyber-table thead {
+    display: none;
+  }
+  .cyber-table tr {
+    margin-bottom: 0.85rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.6rem;
+    border-radius: 4px;
+  }
+  .cyber-table td {
+    border-bottom: none;
+    padding: 0.35rem 0;
+  }
+}
+
