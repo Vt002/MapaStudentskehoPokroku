@@ -1,4 +1,4 @@
-# 🗺️ Mapa studentského pokroku
+# 🗺️ Mapa studentského pokroku - test
 
 > **Interaktivní statická webová aplikace připravená jako GitHub Template repozitář.**  
 > Slouží studentům k formativnímu sledování vlastního učebního pokroku v odborných maturitních okruzích (obory A, E, S) a pedagogům k transparentnímu nastavování kritérií úspěchu a termínů.
