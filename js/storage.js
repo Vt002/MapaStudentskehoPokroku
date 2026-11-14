@@ -19,7 +19,7 @@
       exportedAt: new Date().toISOString(),
       selectedTrack: 'ALL',
       manualCurrentStationId: null,
-      theme: 'cyberpunk', // 'cyberpunk' | 'minimal-light' | 'minimal-dark' | 'scifi-rpg'
+      theme: 'minimal-light', // 'minimal-light' | 'minimal-dark' | 'cyberpunk' | 'scifi' | 'steampunk'
       activeView: 'map',
       stations: {}
     };
@@ -55,7 +55,10 @@
 
         // Migrace schématu a starého quietMode
         if (!parsed.theme) {
-          parsed.theme = parsed.quietMode ? 'minimal-dark' : 'cyberpunk';
+          parsed.theme = parsed.quietMode ? 'minimal-dark' : 'minimal-light';
+        }
+        if (parsed.theme === 'scifi-rpg') {
+          parsed.theme = 'scifi';
         }
         if (!parsed.stations) parsed.stations = {};
         // Odstranění zbytků extra.rocnikovy ze starších verzí
@@ -192,7 +195,9 @@
 
         if (imported.selectedTrack) current.selectedTrack = imported.selectedTrack;
         if (imported.manualCurrentStationId) current.manualCurrentStationId = imported.manualCurrentStationId;
-        if (imported.theme) current.theme = imported.theme;
+        if (imported.theme) {
+          current.theme = imported.theme === 'scifi-rpg' ? 'scifi' : imported.theme;
+        }
 
         this.save(current);
         return { success: true, count: Object.keys(imported.stations || {}).length };

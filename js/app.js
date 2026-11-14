@@ -18,7 +18,7 @@
     var state = storage.load();
 
     // Nastavení aktivního skinu/tématu
-    applyTheme(state.theme || 'cyberpunk');
+    applyTheme(state.theme || 'minimal-light');
 
     // Načtení centrálních termínů ze schedule.json (pokud běžíme přes HTTP/HTTPS)
     syncScheduleData(function (updatedSchedule) {
@@ -35,8 +35,9 @@
   }
 
   function applyTheme(themeName) {
-    var validThemes = ['cyberpunk', 'minimal-light', 'minimal-dark', 'scifi-rpg'];
-    var activeTheme = validThemes.indexOf(themeName) !== -1 ? themeName : 'cyberpunk';
+    var validThemes = ['minimal-light', 'minimal-dark', 'cyberpunk', 'scifi', 'steampunk'];
+    var normalized = themeName === 'scifi-rpg' ? 'scifi' : themeName;
+    var activeTheme = validThemes.indexOf(normalized) !== -1 ? normalized : 'minimal-light';
     document.body.setAttribute('data-theme', activeTheme);
     var sel = document.getElementById('theme-selector');
     if (sel) {
@@ -295,7 +296,7 @@
       });
     });
 
-    // 2. Přepínač skinu / vzhledu (Cyberpunk, Minimal světlý, Minimal tmavý, Sci-fi RPG)
+    // 2. Přepínač skinu / vzhledu (Minimal světlý, Minimal tmavý, Cyberpunk, Sci-fi, Steampunk)
     var themeSel = document.getElementById('theme-selector');
     if (themeSel) {
       themeSel.addEventListener('change', function () {
@@ -304,6 +305,7 @@
         var state = storage.load();
         state.theme = selectedTheme;
         storage.save(state);
+        renderAllViews();
       });
     }
 

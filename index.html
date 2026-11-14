@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Interaktivní Mapa studentského pokroku pro sledování formativního rozvoje a maturitních okruhů.">
+  <meta name="description"
+    content="Interaktivní Mapa studentského pokroku pro sledování formativního rozvoje a maturitních okruhů.">
   <title>Mapa studentského pokroku</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-theme="cyberpunk">
+
+<body data-theme="minimal-light">
 
   <div class="app-container">
-    
+
     <!-- 1. HLAVIČKA -->
     <header class="header-cyber" role="banner">
       <div class="header-top">
         <div class="brand-block">
           <span class="brand-sys" aria-hidden="true">// PŘEHLED TÉMAT // MAPA STUDENTSKÉHO POKROKU</span>
           <h1 class="brand-title">Mapa studentského pokroku</h1>
-          <p class="brand-subtitle">Formativní navigační systém pro maturitní a odborná témata automatizace, elektrotechniky a mechatroniky</p>
+          <p class="brand-subtitle">Formativní navigační systém pro maturitní a odborná témata automatizace,
+            elektrotechniky a mechatroniky</p>
         </div>
 
         <div class="header-meta-group">
@@ -34,10 +38,14 @@
       <!-- Řídicí panel: výběr oboru a skinů (odstraněn text "MŮJ OBOR" dle zadání) -->
       <nav class="controls-bar" aria-label="Filtrování oborů a přepínání zobrazení">
         <div class="track-btn-group" role="group" aria-label="Výběr oboru">
-          <button class="cyber-btn-track active" data-track="ALL" type="button" aria-pressed="true">Všechny obory</button>
-          <button class="cyber-btn-track" data-track="A" type="button" aria-pressed="false" style="color: var(--track-a);">Obor A</button>
-          <button class="cyber-btn-track" data-track="E" type="button" aria-pressed="false" style="color: var(--track-e);">Obor E</button>
-          <button class="cyber-btn-track" data-track="S" type="button" aria-pressed="false" style="color: var(--track-s);">Obor S</button>
+          <button class="cyber-btn-track active" data-track="ALL" type="button" aria-pressed="true">Všechny
+            obory</button>
+          <button class="cyber-btn-track" data-track="A" type="button" aria-pressed="false"
+            style="color: var(--track-a);">Obor A</button>
+          <button class="cyber-btn-track" data-track="E" type="button" aria-pressed="false"
+            style="color: var(--track-e);">Obor E</button>
+          <button class="cyber-btn-track" data-track="S" type="button" aria-pressed="false"
+            style="color: var(--track-s);">Obor S</button>
         </div>
 
         <div class="right-controls">
@@ -45,10 +53,11 @@
           <div class="theme-selector-wrap">
             <label for="theme-selector" class="control-label">Skin:</label>
             <select id="theme-selector" class="cyber-select" aria-label="Výběr vizuálního skinu">
-              <option value="cyberpunk">Cyberpunk (výchozí)</option>
-              <option value="minimal-light">Minimalistický světlý</option>
+              <option value="minimal-light" selected>Minimalistický světlý (výchozí)</option>
               <option value="minimal-dark">Minimalistický tmavý</option>
-              <option value="scifi-rpg">Sci-fi RPG hra</option>
+              <option value="cyberpunk">Cyberpunk</option>
+              <option value="scifi">Sci-fi</option>
+              <option value="steampunk">Steampunk</option>
             </select>
           </div>
 
@@ -64,7 +73,9 @@
     <!-- 2. UPOZORNĚNÍ PRO STUDENTY: NEZADÁVAT PŘÍLIŠ OSOBNÍ INFORMACE -->
     <div class="privacy-advisory-banner" role="note">
       <span class="advisory-icon" aria-hidden="true">💡</span>
-      <span class="advisory-text"><strong>Doporučení pro studenty:</strong> Do poznámek a hodnocení nezadávejte příliš osobní ani citlivé informace. Zaměřte se především na odborné postřehy, technické parametry zapojení a vlastní sebehodnocení k probíraným tématům.</span>
+      <span class="advisory-text"><strong>Doporučení pro studenty:</strong> Do poznámek a hodnocení nezadávejte příliš
+        osobní ani citlivé informace. Zaměřte se především na odborné postřehy, technické parametry zapojení a vlastní
+        sebehodnocení k probíraným tématům.</span>
     </div>
 
     <!-- 3. UKAZATEL POKROKU TRATI -->
@@ -99,16 +110,20 @@
       </div>
 
       <div class="footer-actions">
-        <button class="cyber-btn" id="btn-export-data" type="button" title="Zálohovat své poznámky a hodnocení do souboru progress.json">
+        <button class="cyber-btn" id="btn-export-data" type="button"
+          title="Zálohovat své poznámky a hodnocení do souboru progress.json">
           💾 Export progress.json
         </button>
-        <button class="cyber-btn" id="btn-import-data" type="button" title="Obnovit své poznámky ze souboru progress.json">
+        <button class="cyber-btn" id="btn-import-data" type="button"
+          title="Obnovit své poznámky ze souboru progress.json">
           📂 Import ze zálohy
         </button>
-        <button class="cyber-btn" id="btn-clear-all-data" type="button" style="border-color: var(--status-danger); color: #FF99AA;" title="Smazat data v tomto prohlížeči">
+        <button class="cyber-btn" id="btn-clear-all-data" type="button"
+          style="border-color: var(--status-danger); color: #FF99AA;" title="Smazat data v tomto prohlížeči">
           🗑️ Smazat vše
         </button>
-        <a class="cyber-btn" href="teacher/schedule-editor.html" style="font-size: 0.75rem; opacity: 0.6;" title="Administrační editor termínů pro pedagogy">
+        <a class="cyber-btn" href="teacher/schedule-editor.html" style="font-size: 0.75rem; opacity: 0.6;"
+          title="Administrační editor termínů pro pedagogy">
           ⚙️ Editor vyučujícího
         </a>
       </div>
@@ -118,36 +133,45 @@
 
   <!-- 6. MODAL & DRAWER PRO DETAIL TÉMATU -->
   <div class="details-overlay" id="details-overlay" aria-hidden="true"></div>
-  <aside class="details-panel" id="details-drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Podrobnosti vybraného tématu">
+  <aside class="details-panel" id="details-drawer" aria-hidden="true" role="dialog" aria-modal="true"
+    aria-label="Podrobnosti vybraného tématu">
     <!-- Vykresluje se dynamicky přes js/render.js -->
   </aside>
 
   <!-- 7. MODÁLNÍ OKNO NÁPOVĚDY (NÁVOD K PROVOZU A ŠABLONĚ) -->
   <div class="modal-backdrop" id="modal-backdrop"></div>
   <div class="modal-dialog-cyber" id="help-modal" role="dialog" aria-modal="true" aria-labelledby="help-modal-title">
-    <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--track-a); letter-spacing: 1.5px;">// NÁPOVĚDA // PRŮVODCE PROVOZEM</div>
+    <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--track-a); letter-spacing: 1.5px;">//
+      NÁPOVĚDA // PRŮVODCE PROVOZEM</div>
     <h3 id="help-modal-title" style="font-size: 1.4rem; font-weight: 700;">Jak provozovat Mapu studentského pokroku</h3>
-    
+
     <div class="help-guide-block">
       <h4>💻 1. Zcela offline na svém počítači (100% soukromí)</h4>
       <p style="font-size: 0.95rem;">
-        Nemusíte instalovat žádný server ani doplňky. Stačí stáhnout <strong>ZIP balíček</strong> aplikace (nebo zkopírovat složku) na svůj disk či flashdisk a dvakrát kliknout na soubor <code>index.html</code>. Veškerá hodnocení i osobní poznámky se ukládají výhradně ve vašem prohlížeči (<code>localStorage</code>).
+        Nemusíte instalovat žádný server ani doplňky. Stačí stáhnout <strong>ZIP balíček</strong> aplikace (nebo
+        zkopírovat složku) na svůj disk či flashdisk a dvakrát kliknout na soubor <code>index.html</code>. Veškerá
+        hodnocení i osobní poznámky se ukládají výhradně ve vašem prohlížeči (<code>localStorage</code>).
       </p>
     </div>
 
     <div class="help-guide-block">
       <h4>🚀 2. Online na svém GitHubu (GitHub Template)</h4>
       <p style="font-size: 0.95rem;">
-        Na stránce tohoto repozitáře na GitHubu klikněte na zelené tlačítko <strong>„Use this template“</strong> ➔ <strong>„Create a new repository“</strong>.<br><br>
-        🔒 <strong>Důležité doporučení k soukromí:</strong> Nastavte repozitář jako <strong>Private (soukromý)</strong>. Tím zajistíte, že pokud byste si v budoucnu vyexportovali svá hodnocení, nikdo cizí je neuvidí.<br><br>
-        Na soukromém repozitáři můžete aplikaci otevírat lokálně, nebo pokud máte studentský účet <em>GitHub Student Developer Pack (Education/Pro)</em>, můžete v <strong>Settings ➔ Pages</strong> zapnout živé publikování na GitHub Pages. (Pozn.: GitHub Free zveřejňuje Pages pouze z veřejných repozitářů).
+        Na stránce tohoto repozitáře na GitHubu klikněte na zelené tlačítko <strong>„Use this template“</strong> ➔
+        <strong>„Create a new repository“</strong>.<br><br>
+        🔒 <strong>Důležité doporučení k soukromí:</strong> Nastavte repozitář jako <strong>Private (soukromý)</strong>.
+        Tím zajistíte, že pokud byste si v budoucnu vyexportovali svá hodnocení, nikdo cizí je neuvidí.<br><br>
+        Na soukromém repozitáři můžete aplikaci otevírat lokálně, nebo pokud máte studentský účet <em>GitHub Student
+          Developer Pack (Education/Pro)</em>, můžete v <strong>Settings ➔ Pages</strong> zapnout živé publikování na
+        GitHub Pages. (Pozn.: GitHub Free zveřejňuje Pages pouze z veřejných repozitářů).
       </p>
     </div>
 
     <div class="help-guide-block">
       <h4>💾 3. Zálohování a přenos dat mezi počítači</h4>
       <p style="font-size: 0.95rem;">
-        Tlačítkem <strong>„Export progress.json“</strong> v patičce si stáhnete lokální záložní soubor. Na jiném školním nebo domácím počítači pak stačí zvolit <strong>„Import ze zálohy“</strong> a váš pokrok se okamžitě načte.
+        Tlačítkem <strong>„Export progress.json“</strong> v patičce si stáhnete lokální záložní soubor. Na jiném školním
+        nebo domácím počítači pak stačí zvolit <strong>„Import ze zálohy“</strong> a váš pokrok se okamžitě načte.
       </p>
     </div>
 
@@ -157,13 +181,17 @@
   </div>
 
   <!-- 8. BEZPEČNOSTNÍ UPOZORNĚNÍ PRO IMPORT/EXPORT -->
-  <div class="modal-dialog-cyber" id="privacy-warning-modal" role="dialog" aria-modal="true" aria-labelledby="modal-priv-title">
-    <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--status-danger); letter-spacing: 1.5px;">SECURITY & PRIVACY NOTICE // GITHUB PAGES</div>
+  <div class="modal-dialog-cyber" id="privacy-warning-modal" role="dialog" aria-modal="true"
+    aria-labelledby="modal-priv-title">
+    <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--status-danger); letter-spacing: 1.5px;">
+      SECURITY & PRIVACY NOTICE // GITHUB PAGES</div>
     <h3 id="modal-priv-title" style="font-size: 1.3rem; font-weight: 700;">Upozornění k soukromí dat</h3>
-    
-    <div style="background: rgba(255, 51, 102, 0.1); border-left: 3px solid var(--status-danger); padding: 0.75rem 1rem; font-size: 0.85rem; color: #FFB3BA; line-height: 1.4;">
+
+    <div
+      style="background: rgba(255, 51, 102, 0.1); border-left: 3px solid var(--status-danger); padding: 0.75rem 1rem; font-size: 0.85rem; color: #FFB3BA; line-height: 1.4;">
       ⚠️ Tato aplikace ukládá vaše hodnocení lokálně ve vašem prohlížeči.<br>
-      Pokud exportovaný soubor <code>progress.json</code> nahrajete do veřejného GitHub repozitáře, bude vaše hodnocení veřejně přístupné komukoli na internetu!
+      Pokud exportovaný soubor <code>progress.json</code> nahrajete do veřejného GitHub repozitáře, bude vaše hodnocení
+      veřejně přístupné komukoli na internetu!
     </div>
 
     <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">
@@ -187,4 +215,5 @@
   <script src="js/render.js"></script>
   <script src="js/app.js"></script>
 </body>
+
 </html>

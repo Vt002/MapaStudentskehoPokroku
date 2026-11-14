@@ -1,4 +1,4 @@
-# 🗺️ Mapa studentského pokroku - test
+# 🗺️ Mapa studentského pokroku
 
 > **Interaktivní statická webová aplikace připravená jako GitHub Template repozitář.**  
 > Slouží studentům k formativnímu sledování vlastního učebního pokroku v odborných maturitních okruzích (obory A, E, S) a pedagogům k transparentnímu nastavování kritérií úspěchu a termínů.
@@ -6,11 +6,17 @@
 ---
 
 ## 🎨 Dostupné vizuální skiny (vzhledy)
-V pravém horním rohu ovládací lišty si můžete zvolit jeden ze 4 vizuálních skinů:
-1. **Cyberpunk (výchozí):** Neonová sci-fi grafika s pulzujícím proudem dat a HUD prvky.
-2. **Minimalistický světlý:** Čistý, kontrastní světlý design vhodný pro denní studium a tisk.
-3. **Minimalistický tmavý:** Elegantní břidlicově tmavé téma bez rušivých efektů.
-4. **Sci-fi RPG hra:** Futuristické herní rozhraní s prvky space-quest mapy a zlatými akcenty.
+V pravém horním rohu ovládací lišty si můžete zvolit jeden z 5 vizuálních skinů:
+1. **Minimalistický světlý (výchozí):** Čistý, přehledný a vysoce kontrastní světlý design vhodný pro denní studium a tisk.
+2. **Minimalistický tmavý:** Elegantní břidlicově tmavé téma bez rušivých efektů šetřící zrak.
+3. **Cyberpunk:** Neonová sci-fi grafika s pulzujícím proudem dat, HUD prvky a scanlines.
+4. **Sci-fi:** Styl vědeckého průzkumu vesmíru – decentní technické rozhraní s orbitálními koridory, waypointy a telemetrickými daty.
+5. **Steampunk:** Styl viktoriánské technické dílny – masivní parní potrubí, měděné rozvody, mosazné manometry s ukazateli tlaku a hodinová soukolí.
+
+### 🔵 Barevné kódování oborů (napříč všemi skiny):
+- **Obor A (Aplikovaná informatika / Automatizace):** Všude **modrá** (odstín přizpůsoben skinu).
+- **Obor E (Elektrotechnika):** Všude **oranžová** (odstín přizpůsoben skinu).
+- **Obor S (Strojírenství / Mechatronika):** Všude **žlutá / zlatavá** (odstín přizpůsoben skinu).
 
 ---
 

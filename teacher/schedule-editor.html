@@ -109,7 +109,7 @@
   </style>
 </head>
 
-<body data-theme="cyberpunk">
+<body data-theme="minimal-light">
 
   <div class="editor-container">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
@@ -210,6 +210,19 @@
   <script src="../data/schedule.js"></script>
   <script>
     (function () {
+      // Synchronizace tématu s hlavní mapou
+      try {
+        for (var k in localStorage) {
+          if (k.indexOf('msp:v1:') === 0) {
+            var stObj = JSON.parse(localStorage.getItem(k));
+            if (stObj && stObj.theme) {
+              document.body.setAttribute('data-theme', stObj.theme);
+              break;
+            }
+          }
+        }
+      } catch (e) { }
+
       var mapData = window.MAP_DATA;
       var tbody = document.getElementById('editor-table-body');
       var statusBox = document.getElementById('save-status-box');

@@ -16,7 +16,7 @@
         id: 'A',
         name: 'Obor A (Aplikovaná informatika / Automatizace)',
         shortName: 'A',
-        color: '#00E5FF', // azurová
+        color: '#0284C7', // Modrá (odstín dle skinu)
         lineStyle: 'solid',
         stations: [
           'vyber',
@@ -33,7 +33,7 @@
         id: 'E',
         name: 'Obor E (Elektrotechnika)',
         shortName: 'E',
-        color: '#FF3DCB', // purpurová
+        color: '#EA580C', // Oranžová (odstín dle skinu)
         lineStyle: 'dotted',
         stations: [
           'vyber',
@@ -48,7 +48,7 @@
         id: 'S',
         name: 'Obor S (Strojírenství / Mechatronika)',
         shortName: 'S',
-        color: '#FCEE09', // kyselá žlutá
+        color: '#CA8A04', // Žlutá (odstín dle skinu)
         lineStyle: 'dashed',
         stations: [
           'vyber',

@@ -258,30 +258,120 @@
       var today = root.MSPStorage.getISODateToday();
       var currentStationId = this.detectCurrentStationId(mapData, studentState);
 
+      var selectedTrack = studentState.selectedTrack || 'ALL';
+      var today = root.MSPStorage.getISODateToday();
+      var currentStationId = this.detectCurrentStationId(mapData, studentState);
+
+      var activeTheme = (studentState && studentState.theme) || (typeof document !== 'undefined' && document.body.getAttribute('data-theme')) || 'minimal-light';
+      if (activeTheme === 'scifi-rpg') activeTheme = 'scifi';
+      var isScifi = (activeTheme === 'scifi');
+      var isSteampunk = (activeTheme === 'steampunk');
+
       var filterClass = '';
       if (selectedTrack === 'A') filterClass = 'filter-a';
       else if (selectedTrack === 'E') filterClass = 'filter-e';
       else if (selectedTrack === 'S') filterClass = 'filter-s';
 
       var svgHtml = [];
-      svgHtml.push('<svg class="metro-svg ' + filterClass + '" viewBox="' + MAP_COORDS.viewBox + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interaktivní metro mapa studentského pokroku">');
+      svgHtml.push('<svg class="metro-svg ' + filterClass + '" viewBox="' + MAP_COORDS.viewBox + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interaktivní mapa studentského pokroku">');
       
       svgHtml.push('<defs>');
       svgHtml.push('  <filter id="glowCyan" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>');
+      
+      if (isScifi) {
+        svgHtml.push('  <pattern id="scifiGrid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(14, 165, 233, 0.08)" stroke-width="1"/><circle cx="0" cy="0" r="1.2" fill="rgba(14, 165, 233, 0.25)"/></pattern>');
+        svgHtml.push('  <filter id="scifiGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>');
+      } else if (isSteampunk) {
+        svgHtml.push('  <radialGradient id="steampunkDialGrad" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#3A281B"/><stop offset="85%" stop-color="#231710"/><stop offset="100%" stop-color="#140D09"/></radialGradient>');
+        svgHtml.push('  <linearGradient id="brassBezelGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E5C158"/><stop offset="35%" stop-color="#8B6F47"/><stop offset="70%" stop-color="#D4AF37"/><stop offset="100%" stop-color="#5C4524"/></linearGradient>');
+      }
       svgHtml.push('</defs>');
+
+      // Pozadí a grafické prvky specifické pro Skin
+      if (isScifi) {
+        svgHtml.push('<rect width="1360" height="440" fill="url(#scifiGrid)"/>');
+        // Horní telemetrická lišta
+        svgHtml.push('<g opacity="0.8" font-family="JetBrains Mono" font-size="10">');
+        svgHtml.push('  <text x="50" y="24" fill="rgba(14, 165, 233, 0.85)">[ NAV-SYS // SECTOR-SPŠELIT-AUT ]</text>');
+        svgHtml.push('  <text x="680" y="24" fill="#E2E8F0" font-weight="700" letter-spacing="2" text-anchor="middle">ORBITÁLNÍ LETOVÝ KORIDOR &amp; TELEMETRIE TÉMAT</text>');
+        svgHtml.push('  <text x="1310" y="24" fill="#10B981" text-anchor="end">● TELEMETRY LINK: ONLINE</text>');
+        svgHtml.push('  <line x1="50" y1="32" x2="1310" y2="32" stroke="rgba(14, 165, 233, 0.3)" stroke-width="1" stroke-dasharray="8 6"/>');
+        svgHtml.push('</g>');
+        // Vodicí linie orbitálních hladin
+        svgHtml.push('<line x1="90" y1="110" x2="1290" y2="110" stroke="rgba(14, 165, 233, 0.12)" stroke-dasharray="3 6"/>');
+        svgHtml.push('<text x="95" y="103" fill="rgba(14, 165, 233, 0.55)" font-family="JetBrains Mono" font-size="9">ORBIT-A // ALT: 110 KM</text>');
+        svgHtml.push('<line x1="90" y1="260" x2="1290" y2="260" stroke="rgba(249, 115, 22, 0.12)" stroke-dasharray="3 6"/>');
+        svgHtml.push('<text x="95" y="253" fill="rgba(249, 115, 22, 0.55)" font-family="JetBrains Mono" font-size="9">AXIS-E/S // ALT: 260 KM</text>');
+        // Spodní telemetrické souřadnice
+        svgHtml.push('<g opacity="0.65" font-family="JetBrains Mono" font-size="9">');
+        svgHtml.push('  <line x1="50" y1="416" x2="1310" y2="416" stroke="rgba(14, 165, 233, 0.2)" stroke-dasharray="10 8"/>');
+        svgHtml.push('  <text x="50" y="430" fill="#64748B">POS: LAT 50°18\'N LON 16°19\'E | TRAJECTORY: STABLE</text>');
+        svgHtml.push('  <text x="1310" y="430" fill="#64748B" text-anchor="end">SPŠELIT DOBRUŠKA // SPACE TELEMETRY LAB</text>');
+        svgHtml.push('</g>');
+      } else if (isSteampunk) {
+        // Viktoriánský zdobný mosazný rám s nýty v rozích
+        svgHtml.push('<rect x="14" y="14" width="1332" height="412" fill="none" stroke="#8B6F47" stroke-width="2" rx="6"/>');
+        svgHtml.push('<rect x="18" y="18" width="1324" height="404" fill="none" stroke="rgba(212, 175, 55, 0.35)" stroke-width="1" stroke-dasharray="6 6"/>');
+        // Mosazné nýty v rozích
+        var rivets = [[28,28], [1332,28], [28,412], [1332,412]];
+        for (var r = 0; r < rivets.length; r++) {
+          svgHtml.push('<circle cx="' + rivets[r][0] + '" cy="' + rivets[r][1] + '" r="5" fill="#D4AF37" stroke="#5C4524" stroke-width="1.5"/>');
+          svgHtml.push('<circle cx="' + rivets[r][0] + '" cy="' + rivets[r][1] + '" r="1.5" fill="#140D09"/>');
+        }
+        // Záhlaví kartuše
+        svgHtml.push('<g font-family="Georgia, serif" fill="#D4AF37" text-anchor="middle">');
+        svgHtml.push('  <text x="680" y="27" font-size="11.5" font-weight="700" letter-spacing="1.5">⚙ PARNÍ A ELEKTROMECHANICKÝ ROZVOD // TECHNICKÉ DÍLNY A LABORATOŘE ⚙</text>');
+        svgHtml.push('</g>');
+      }
 
       // Tratě (Linky)
       var pathA = 'M 90,230 C 150,230 180,110 250,110 L 570,110 C 640,110 670,230 730,230 L 1180,230';
-      svgHtml.push('<path class="track-line track-a" d="' + pathA + '" />');
-      svgHtml.push('<path class="track-pulse track-a" d="' + pathA + '" />');
-
       var pathE = 'M 90,260 L 1290,260';
-      svgHtml.push('<path class="track-line track-e" d="' + pathE + '" />');
-      svgHtml.push('<path class="track-pulse track-e" d="' + pathE + '" />');
-
       var pathS = 'M 90,290 L 1290,290';
-      svgHtml.push('<path class="track-line track-s" d="' + pathS + '" />');
-      svgHtml.push('<path class="track-pulse track-s" d="' + pathS + '" />');
+
+      if (isSteampunk) {
+        // Steampunk: Masivní litinové a měděné parní potrubí s přírubami
+        // 1. Spodní vrstva - litinové pouzdro trubek
+        svgHtml.push('<path class="track-line track-a" d="' + pathA + '" stroke="#120D0A" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" />');
+        svgHtml.push('<path class="track-line track-e" d="' + pathE + '" stroke="#120D0A" stroke-width="14" stroke-linecap="round" />');
+        svgHtml.push('<path class="track-line track-s" d="' + pathS + '" stroke="#120D0A" stroke-width="14" stroke-linecap="round" />');
+        // 2. Vnitřní parní / elektrické vedení
+        svgHtml.push('<path class="track-line track-a" d="' + pathA + '" stroke-width="7" />');
+        svgHtml.push('<path class="track-line track-e" d="' + pathE + '" stroke-width="7" />');
+        svgHtml.push('<path class="track-line track-s" d="' + pathS + '" stroke-width="7" />');
+        // 3. Spojovací příruby na potrubí
+        var flanges = [170, 330, 490, 650, 810, 960, 1110, 1230];
+        for (var fl = 0; fl < flanges.length; fl++) {
+          var fx = flanges[fl];
+          svgHtml.push('<rect x="' + (fx - 2) + '" y="253" width="4" height="14" fill="#D4AF37" stroke="#5C4524" stroke-width="1" />');
+          svgHtml.push('<rect x="' + (fx - 2) + '" y="283" width="4" height="14" fill="#D4AF37" stroke="#5C4524" stroke-width="1" />');
+        }
+      } else if (isScifi) {
+        // Sci-fi: Přesné vektorové koridory a telemetrické linky
+        svgHtml.push('<path class="track-line track-a" d="' + pathA + '" stroke-width="5" filter="url(#scifiGlow)" />');
+        svgHtml.push('<path class="track-pulse track-a" d="' + pathA + '" />');
+        svgHtml.push('<path class="track-line track-e" d="' + pathE + '" stroke-width="5" />');
+        svgHtml.push('<path class="track-line track-s" d="' + pathS + '" stroke-width="5" />');
+        // Vektorové směrové šipky podél trati A
+        svgHtml.push('<g fill="var(--track-a)" opacity="0.6">');
+        svgHtml.push('  <polygon points="190,140 197,135 190,130" />');
+        svgHtml.push('  <polygon points="330,110 337,105 330,100" />');
+        svgHtml.push('  <polygon points="490,110 497,105 490,100" />');
+        svgHtml.push('  <polygon points="650,140 657,145 650,150" />');
+        svgHtml.push('  <polygon points="960,230 967,225 960,220" />');
+        svgHtml.push('</g>');
+      } else {
+        // Cyberpunk a Minimalistické skiny: Původní čistá metro mapa
+        svgHtml.push('<path class="track-line track-a" d="' + pathA + '" />');
+        svgHtml.push('<path class="track-pulse track-a" d="' + pathA + '" />');
+        svgHtml.push('<path class="track-line track-e" d="' + pathE + '" />');
+        svgHtml.push('<path class="track-pulse track-e" d="' + pathE + '" />');
+        svgHtml.push('<path class="track-line track-s" d="' + pathS + '" />');
+        svgHtml.push('<path class="track-pulse track-s" d="' + pathS + '" />');
+      }
+
+      // Mapování indexů pro waypointy Sci-fi
+      var waypointIds = ['vyber', 'dio-mcu', 'iot', 'vyvojove', 'plc', 'dio-plc', 'senzory', 'regulace', 'bezpecnost'];
 
       // Vykreslení uzlů stanic
       for (var stId in MAP_COORDS.stations) {
@@ -314,21 +404,80 @@
         var capW = 38;
         var capX = coord.x - capW / 2;
         var capY = coord.y - coord.h / 2;
-        svgHtml.push('  <rect class="station-shape ' + statusClass + '" x="' + capX + '" y="' + capY + '" width="' + capW + '" height="' + coord.h + '" rx="14" />');
 
-        var iconChar = '•';
-        if (isDone) iconChar = '✓';
-        else if (isWorking) iconChar = '⚡';
-        else if (isHelp) iconChar = '?';
-        svgHtml.push('  <text x="' + coord.x + '" y="' + (coord.y + 5) + '" text-anchor="middle" fill="#E6F1FF" font-family="JetBrains Mono" font-size="14" font-weight="700">' + iconChar + '</text>');
+        if (isSteampunk) {
+          // Steampunk: Viktoriánský manometr / tlakoměr s mosazným rámečkem
+          svgHtml.push('  <rect x="' + (capX - 2) + '" y="' + (capY - 2) + '" width="' + (capW + 4) + '" height="' + (coord.h + 4) + '" rx="16" fill="url(#brassBezelGrad)" stroke="#5C4524" stroke-width="1.5" />');
+          svgHtml.push('  <rect class="station-shape ' + statusClass + '" x="' + capX + '" y="' + capY + '" width="' + capW + '" height="' + coord.h + '" rx="14" fill="url(#steampunkDialGrad)" />');
+          // Nýtky po obvodu
+          svgHtml.push('  <circle cx="' + coord.x + '" cy="' + (capY + 3) + '" r="1.5" fill="#D4AF37"/>');
+          svgHtml.push('  <circle cx="' + coord.x + '" cy="' + (capY + coord.h - 3) + '" r="1.5" fill="#D4AF37"/>');
+          // Ručička manometru indikující stav
+          var needleAngle = -90; // waiting
+          if (isDone) needleAngle = 45;      // zelená zóna plného tlaku
+          else if (isWorking) needleAngle = 0; // provozní tlak
+          else if (isHelp) needleAngle = -45;  // varovný tlak
+          svgHtml.push('  <g transform="translate(' + coord.x + ',' + coord.y + ') rotate(' + needleAngle + ')">');
+          svgHtml.push('    <line x1="0" y1="0" x2="0" y2="-12" stroke="#D4AF37" stroke-width="2" stroke-linecap="round" />');
+          svgHtml.push('    <circle cx="0" cy="0" r="3" fill="#8B6F47" stroke="#D4AF37" stroke-width="1" />');
+          svgHtml.push('  </g>');
+        } else if (isScifi) {
+          // Sci-fi: Waypoint modul s přesnými rohovými závorkami a telemetrickým kódem
+          var wpIdx = waypointIds.indexOf(stId) + 1;
+          var wpTag = 'WP-' + (wpIdx < 10 ? '0' + wpIdx : wpIdx);
+          var tagY = coord.y < 200 ? capY - 8 : capY + coord.h + 14;
+          svgHtml.push('  <text class="scifi-waypoint-tag" x="' + coord.x + '" y="' + tagY + '" text-anchor="middle" fill="var(--track-a)">[' + wpTag + ']</text>');
+          // Rohové zaměřovací závorky kolem waypointu
+          var bOff = 4;
+          svgHtml.push('  <path d="M ' + (capX - bOff) + ',' + (capY + 6) + ' L ' + (capX - bOff) + ',' + (capY - bOff) + ' L ' + (capX + 6) + ',' + (capY - bOff) + '" fill="none" stroke="rgba(14, 165, 233, 0.6)" stroke-width="1.5" />');
+          svgHtml.push('  <path d="M ' + (capX + capW - 6) + ',' + (capY - bOff) + ' L ' + (capX + capW + bOff) + ',' + (capY - bOff) + ' L ' + (capX + capW + bOff) + ',' + (capY + 6) + '" fill="none" stroke="rgba(14, 165, 233, 0.6)" stroke-width="1.5" />');
+          svgHtml.push('  <path d="M ' + (capX - bOff) + ',' + (capY + coord.h - 6) + ' L ' + (capX - bOff) + ',' + (capY + coord.h + bOff) + ' L ' + (capX + 6) + ',' + (capY + coord.h + bOff) + '" fill="none" stroke="rgba(14, 165, 233, 0.6)" stroke-width="1.5" />');
+          svgHtml.push('  <path d="M ' + (capX + capW - 6) + ',' + (capY + coord.h + bOff) + ' L ' + (capX + capW + bOff) + ',' + (capY + coord.h + bOff) + ' L ' + (capX + capW + bOff) + ',' + (capY + coord.h - 6) + '" fill="none" stroke="rgba(14, 165, 233, 0.6)" stroke-width="1.5" />');
+          
+          svgHtml.push('  <rect class="station-shape ' + statusClass + '" x="' + capX + '" y="' + capY + '" width="' + capW + '" height="' + coord.h + '" rx="10" />');
+          
+          var iconChar = '•';
+          if (isDone) iconChar = '✓';
+          else if (isWorking) iconChar = '⚡';
+          else if (isHelp) iconChar = '?';
+          svgHtml.push('  <text x="' + coord.x + '" y="' + (coord.y + 5) + '" text-anchor="middle" fill="#E2E8F0" font-family="JetBrains Mono" font-size="14" font-weight="700">' + iconChar + '</text>');
+        } else {
+          // Standardní metro kapsle pro Cyberpunk a Minimalistické skiny
+          svgHtml.push('  <rect class="station-shape ' + statusClass + '" x="' + capX + '" y="' + capY + '" width="' + capW + '" height="' + coord.h + '" rx="14" />');
+          var iconChar = '•';
+          if (isDone) iconChar = '✓';
+          else if (isWorking) iconChar = '⚡';
+          else if (isHelp) iconChar = '?';
+          svgHtml.push('  <text x="' + coord.x + '" y="' + (coord.y + 5) + '" text-anchor="middle" fill="#E6F1FF" font-family="JetBrains Mono" font-size="14" font-weight="700">' + iconChar + '</text>');
+        }
 
+        // Ukazatel "JSEM TADY"
         if (isCurrent) {
           var pinY = capY - 26;
-          svgHtml.push('  <g class="pin-here" transform="translate(' + coord.x + ',' + pinY + ')">');
-          svgHtml.push('    <path d="M 0,0 L 8,-14 A 8,8 0 1,0 -8,-14 Z" fill="#00E5FF" filter="url(#glowCyan)"/>');
-          svgHtml.push('    <circle cx="0" cy="-14" r="3.5" fill="#05060F"/>');
-          svgHtml.push('    <text x="0" y="-24" text-anchor="middle" fill="#00E5FF" font-family="JetBrains Mono" font-size="10" font-weight="700" letter-spacing="1">JSEM TADY</text>');
-          svgHtml.push('  </g>');
+          if (isScifi) {
+            // Sci-fi: Zaměřovací radarový cíl
+            svgHtml.push('  <g class="pin-here" transform="translate(' + coord.x + ',' + pinY + ')">');
+            svgHtml.push('    <circle cx="0" cy="-6" r="10" fill="none" stroke="var(--track-a)" stroke-width="1.5" stroke-dasharray="4 2" />');
+            svgHtml.push('    <circle cx="0" cy="-6" r="3.5" fill="var(--track-a)" filter="url(#scifiGlow)" />');
+            svgHtml.push('    <line x1="-15" y1="-6" x2="-8" y2="-6" stroke="var(--track-a)" stroke-width="1.5"/>');
+            svgHtml.push('    <line x1="8" y1="-6" x2="15" y2="-6" stroke="var(--track-a)" stroke-width="1.5"/>');
+            svgHtml.push('    <text x="0" y="-20" text-anchor="middle" fill="var(--track-a)" font-family="JetBrains Mono" font-size="9.5" font-weight="700" letter-spacing="1">⌖ TARGET LOCK</text>');
+            svgHtml.push('  </g>');
+          } else if (isSteampunk) {
+            // Steampunk: Mosazná olovnice / kompas s ozubeným kolem
+            svgHtml.push('  <g class="pin-here" transform="translate(' + coord.x + ',' + pinY + ')">');
+            svgHtml.push('    <path d="M 0,0 L 7,-13 L -7,-13 Z" fill="#D4AF37" stroke="#5C4524" stroke-width="1"/>');
+            svgHtml.push('    <circle cx="0" cy="-14" r="5" fill="#8B6F47" stroke="#D4AF37" stroke-width="1.5"/>');
+            svgHtml.push('    <text x="0" y="-24" text-anchor="middle" fill="#D4AF37" font-family="Georgia, serif" font-size="9.5" font-weight="700" letter-spacing="0.5">⚓ KOTVA</text>');
+            svgHtml.push('  </g>');
+          } else {
+            // Cyberpunk & Minimalistické skiny
+            svgHtml.push('  <g class="pin-here" transform="translate(' + coord.x + ',' + pinY + ')">');
+            svgHtml.push('    <path d="M 0,0 L 8,-14 A 8,8 0 1,0 -8,-14 Z" fill="var(--track-a)" filter="url(#glowCyan)"/>');
+            svgHtml.push('    <circle cx="0" cy="-14" r="3.5" fill="var(--bg-deep)"/>');
+            svgHtml.push('    <text x="0" y="-24" text-anchor="middle" fill="var(--track-a)" font-family="JetBrains Mono" font-size="10" font-weight="700" letter-spacing="1">JSEM TADY</text>');
+            svgHtml.push('  </g>');
+          }
         }
 
         var displayTitle = stDef.title;
@@ -338,14 +487,14 @@
         svgHtml.push('  <text class="station-title-text" x="' + coord.x + '" y="' + coord.titleY + '">' + displayTitle + '</text>');
 
         var dlColor = '#9BB0D3';
-        if (dlInfo.state === 'overdue') dlColor = '#FFA07A';
+        if (dlInfo.state === 'overdue') dlColor = isSteampunk ? '#EF4444' : '#FFA07A';
         else if (dlInfo.state === 'near') dlColor = '#FFB000';
-        else if (dlInfo.state === 'done') dlColor = '#39FF88';
+        else if (dlInfo.state === 'done') dlColor = isSteampunk ? '#22C55E' : '#39FF88';
         svgHtml.push('  <text class="station-deadline-text" x="' + coord.x + '" y="' + (coord.titleY + 16) + '" fill="' + dlColor + '">' + dlInfo.shortText + '</text>');
 
         var repoUrl = mapData.repoBaseUrl + stDef.repo;
         svgHtml.push('  <a href="' + repoUrl + '" target="_blank" rel="noopener noreferrer" aria-label="Otevřít repozitář ' + stDef.title + ' v nové záložce">');
-        svgHtml.push('    <text x="' + (coord.x + 22) + '" y="' + (coord.titleY - 8) + '" fill="#00E5FF" font-family="JetBrains Mono" font-size="12" font-weight="700">↗</text>');
+        svgHtml.push('    <text x="' + (coord.x + 22) + '" y="' + (coord.titleY - 8) + '" fill="var(--track-a)" font-family="JetBrains Mono" font-size="12" font-weight="700">↗</text>');
         svgHtml.push('  </a>');
 
         svgHtml.push('</g>');

@@ -10,25 +10,27 @@
   font-weight: 400;
   font-display: swap;
   src: url('../fonts/rajdhani-latin-ext-400-normal.woff2') format('woff2'),
-       url('../fonts/rajdhani-latin-400-normal.woff2') format('woff2');
+    url('../fonts/rajdhani-latin-400-normal.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0100-02AF, U+1E00-1EFF;
 }
+
 @font-face {
   font-family: 'Rajdhani';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url('../fonts/rajdhani-latin-ext-600-normal.woff2') format('woff2'),
-       url('../fonts/rajdhani-latin-600-normal.woff2') format('woff2');
+    url('../fonts/rajdhani-latin-600-normal.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0100-02AF, U+1E00-1EFF;
 }
+
 @font-face {
   font-family: 'Rajdhani';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url('../fonts/rajdhani-latin-ext-700-normal.woff2') format('woff2'),
-       url('../fonts/rajdhani-latin-700-normal.woff2') format('woff2');
+    url('../fonts/rajdhani-latin-700-normal.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0100-02AF, U+1E00-1EFF;
 }
 
@@ -38,68 +40,38 @@
   font-weight: 400;
   font-display: swap;
   src: url('../fonts/jetbrains-mono-latin-ext-400-normal.woff2') format('woff2'),
-       url('../fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
+    url('../fonts/jetbrains-mono-latin-400-normal.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0100-02AF, U+1E00-1EFF;
 }
+
 @font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
   src: url('../fonts/jetbrains-mono-latin-ext-600-normal.woff2') format('woff2'),
-       url('../fonts/jetbrains-mono-latin-600-normal.woff2') format('woff2');
+    url('../fonts/jetbrains-mono-latin-600-normal.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0100-02AF, U+1E00-1EFF;
 }
+
 @font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
   src: url('../fonts/jetbrains-mono-latin-ext-700-normal.woff2') format('woff2'),
-       url('../fonts/jetbrains-mono-latin-700-normal.woff2') format('woff2');
+    url('../fonts/jetbrains-mono-latin-700-normal.woff2') format('woff2');
   unicode-range: U+0000-00FF, U+0100-02AF, U+1E00-1EFF;
 }
 
 /* --- 2. TÉMATA / SKINY (CSS PROMĚNNÉ) --- */
 
-/* VÝCHOZÍ: CYBERPUNK */
-:root, body[data-theme="cyberpunk"] {
+/* 1. VÝCHOZÍ: MINIMALISTICKÝ SVĚTLÝ */
+:root,
+body[data-theme="minimal-light"] {
   --font-main: 'Rajdhani', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', Consolas, "Courier New", monospace;
 
-  --bg-deep: #05060F;
-  --bg-dark: #0B0D1F;
-  --bg-panel: #0F1230;
-  --bg-panel-alt: #161A42;
-  --bg-overlay: rgba(5, 6, 15, 0.85);
-
-  --text-main: #E6F1FF;
-  --text-muted: #9BB0D3;
-  --text-dim: #5C6E91;
-
-  --track-a: #00E5FF; /* Cyan */
-  --track-e: #FF3DCB; /* Magenta */
-  --track-s: #FCEE09; /* Acid Yellow */
-
-  --status-done: #39FF88;
-  --status-working: #00E5FF;
-  --status-waiting: #9BB0D3;
-  --status-help: #FFB000;
-  --status-danger: #FF3366;
-
-  --border-neon: rgba(0, 229, 255, 0.3);
-  --glow-cyan: 0 0 12px rgba(0, 229, 255, 0.45);
-  --glow-accent: 0 0 10px rgba(0, 229, 255, 0.35);
-
-  --corner-clip: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
-  --corner-clip-lg: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
-  --card-radius: 0px;
-  --panel-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
-  --has-scanlines: 1;
-}
-
-/* 2. MINIMALISTICKÝ SVĚTLÝ */
-body[data-theme="minimal-light"] {
   --bg-deep: #F1F5F9;
   --bg-dark: #E2E8F0;
   --bg-panel: #FFFFFF;
@@ -110,9 +82,12 @@ body[data-theme="minimal-light"] {
   --text-muted: #475569;
   --text-dim: #94A3B8;
 
-  --track-a: #0284C7; /* Sky blue */
-  --track-e: #C026D3; /* Fuchsia */
-  --track-s: #B45309; /* Amber brown pro světlé pozadí */
+  --track-a: #0284C7;
+  /* Modrá (Sky blue) */
+  --track-e: #EA580C;
+  /* Oranžová */
+  --track-s: #CA8A04;
+  /* Žlutá (tmavší zlatožlutá pro čitelnost na světlém pozadí) */
 
   --status-done: #16A34A;
   --status-working: #0284C7;
@@ -131,8 +106,11 @@ body[data-theme="minimal-light"] {
   --has-scanlines: 0;
 }
 
-/* 3. MINIMALISTICKÝ TMAVÝ */
+/* 2. MINIMALISTICKÝ TMAVÝ */
 body[data-theme="minimal-dark"] {
+  --font-main: 'Rajdhani', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', Consolas, "Courier New", monospace;
+
   --bg-deep: #0B0F19;
   --bg-dark: #111827;
   --bg-panel: #1E293B;
@@ -144,8 +122,11 @@ body[data-theme="minimal-dark"] {
   --text-dim: #64748B;
 
   --track-a: #38BDF8;
-  --track-e: #F472B6;
+  /* Modrá */
+  --track-e: #FB923C;
+  /* Oranžová */
   --track-s: #FACC15;
+  /* Žlutá */
 
   --status-done: #4ADE80;
   --status-working: #38BDF8;
@@ -164,41 +145,128 @@ body[data-theme="minimal-dark"] {
   --has-scanlines: 0;
 }
 
-/* 4. SCI-FI RPG HRA */
+/* 3. CYBERPUNK */
+body[data-theme="cyberpunk"] {
+  --font-main: 'Rajdhani', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', Consolas, "Courier New", monospace;
+
+  --bg-deep: #05060F;
+  --bg-dark: #0B0D1F;
+  --bg-panel: #0F1230;
+  --bg-panel-alt: #161A42;
+  --bg-overlay: rgba(5, 6, 15, 0.85);
+
+  --text-main: #E6F1FF;
+  --text-muted: #9BB0D3;
+  --text-dim: #5C6E91;
+
+  --track-a: #00E5FF;
+  /* Neonová modrá / cyan */
+  --track-e: #FF7A00;
+  /* Neonová laserová oranžová */
+  --track-s: #FCEE09;
+  /* Neonová acid žlutá */
+
+  --status-done: #39FF88;
+  --status-working: #00E5FF;
+  --status-waiting: #9BB0D3;
+  --status-help: #FFB000;
+  --status-danger: #FF3366;
+
+  --border-neon: rgba(0, 229, 255, 0.3);
+  --glow-cyan: 0 0 12px rgba(0, 229, 255, 0.45);
+  --glow-accent: 0 0 10px rgba(0, 229, 255, 0.35);
+
+  --corner-clip: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+  --corner-clip-lg: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  --card-radius: 0px;
+  --panel-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --has-scanlines: 1;
+}
+
+/* 4. SCI-FI (PRŮZKUM VESMÍRU / VĚDECKO-TECHNICKÁ TELEMETRIE) */
+body[data-theme="scifi"],
 body[data-theme="scifi-rpg"] {
+  --font-main: 'Rajdhani', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', Consolas, "Courier New", monospace;
+
   --bg-deep: #030712;
-  --bg-dark: #0A1128;
-  --bg-panel: #0D1B3E;
-  --bg-panel-alt: #132452;
-  --bg-overlay: rgba(2, 6, 23, 0.9);
+  --bg-dark: #070F26;
+  --bg-panel: #0C1738;
+  --bg-panel-alt: #13224E;
+  --bg-overlay: rgba(3, 7, 18, 0.9);
 
-  --text-main: #F1F5F9;
-  --text-muted: #A5B4FC;
-  --text-dim: #6366F1;
+  --text-main: #E2E8F0;
+  --text-muted: #94A3B8;
+  --text-dim: #64748B;
 
-  --track-a: #06B6D4; /* Cyan holo */
-  --track-e: #EC4899; /* Plasma pink */
-  --track-s: #F59E0B; /* Quest Gold */
+  --track-a: #0EA5E9;
+  /* Orbitální telemetrická modrá */
+  --track-e: #F97316;
+  /* Kosmická plazmová oranžová */
+  --track-s: #EAB308;
+  /* Hvězdná solární žlutá */
 
   --status-done: #10B981;
-  --status-working: #3B82F6;
+  --status-working: #0EA5E9;
   --status-waiting: #64748B;
   --status-help: #F59E0B;
   --status-danger: #EF4444;
 
-  --border-neon: rgba(245, 158, 11, 0.4);
-  --glow-cyan: 0 0 14px rgba(6, 182, 212, 0.5);
-  --glow-accent: 0 0 12px rgba(245, 158, 11, 0.4);
+  --border-neon: rgba(14, 165, 233, 0.35);
+  --glow-cyan: 0 0 10px rgba(14, 165, 233, 0.35);
+  --glow-accent: 0 0 10px rgba(249, 115, 22, 0.3);
 
-  --corner-clip: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-  --corner-clip-lg: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
-  --card-radius: 0px;
-  --panel-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
-  --has-scanlines: 1;
+  --corner-clip: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  --corner-clip-lg: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+  --card-radius: 4px;
+  --panel-shadow: 0 8px 30px rgba(2, 6, 23, 0.75);
+  --has-scanlines: 0;
+}
+
+/* 5. STEAMPUNK (VIKTORIÁNSKÁ DÍLNA, PARNÍ KOTLE & MOSAZNÉ PŘEVODY) */
+body[data-theme="steampunk"] {
+  --font-main: 'Rajdhani', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', Consolas, "Courier New", monospace;
+
+  --bg-deep: #14100D;
+  --bg-dark: #1F1813;
+  --bg-panel: #291F18;
+  --bg-panel-alt: #36291F;
+  --bg-overlay: rgba(20, 16, 13, 0.9);
+
+  --text-main: #F5EBE1;
+  --text-muted: #C8B89E;
+  --text-dim: #8E7A63;
+
+  --track-a: #3B82F6;
+  /* Tesla elektrický výboj - modrá */
+  --track-e: #EA580C;
+  /* Parní měděný rozvod - žhavá oranžová */
+  --track-s: #D4AF37;
+  /* Leštěná mosazná soukolí - zlatavě žlutá */
+
+  --status-done: #22C55E;
+  --status-working: #3B82F6;
+  --status-waiting: #8E7A63;
+  --status-help: #D97706;
+  --status-danger: #DC2626;
+
+  --border-neon: rgba(212, 175, 55, 0.38);
+  --glow-cyan: 0 0 10px rgba(212, 175, 55, 0.3);
+  --glow-accent: 0 0 10px rgba(234, 88, 12, 0.3);
+
+  --corner-clip: none;
+  --corner-clip-lg: none;
+  --card-radius: 6px;
+  --panel-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  --has-scanlines: 0;
 }
 
 /* --- 3. RESET A ZÁKLADNÍ PRVKY --- */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -223,7 +291,7 @@ body {
   transition: background-color 0.3s, color 0.3s;
 }
 
-/* Scanlines overlay (pouze pro Cyberpunk a Sci-fi RPG) */
+/* Scanlines overlay (pouze pro Cyberpunk) */
 body::after {
   content: "";
   position: fixed;
@@ -231,22 +299,19 @@ body::after {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: repeating-linear-gradient(
-    0deg,
-    rgba(0, 0, 0, 0.12) 0px,
-    rgba(0, 0, 0, 0.12) 1px,
-    transparent 1px,
-    transparent 3px
-  );
+  background: repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.12) 0px,
+      rgba(0, 0, 0, 0.12) 1px,
+      transparent 1px,
+      transparent 3px);
   pointer-events: none;
   z-index: 9999;
   opacity: 0.7;
-  display: block;
+  display: none;
 }
 
-body[data-theme="minimal-light"]::after,
-body[data-theme="minimal-dark"]::after {
-  display: none !important;
+body[data-theme="cyberpunk"]::after {
+  display: block;
 }
 
 :focus-visible {
@@ -259,6 +324,7 @@ a {
   text-decoration: none;
   transition: color 0.2s, text-shadow 0.2s;
 }
+
 a:hover {
   text-decoration: underline;
 }
@@ -378,6 +444,7 @@ button {
   padding-top: 0.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
+
 body[data-theme="minimal-light"] .controls-bar {
   border-top: 1px solid #E2E8F0;
 }
@@ -407,26 +474,59 @@ body[data-theme="minimal-light"] .controls-bar {
   border-color: var(--text-main);
   color: var(--text-main);
 }
+
 body[data-theme="minimal-light"] .cyber-btn-track[data-track="ALL"].active {
   background: #0F172A;
   color: #FFFFFF;
 }
 
 .cyber-btn-track[data-track="A"].active {
-  background: rgba(0, 229, 255, 0.2);
+  background: rgba(2, 132, 199, 0.2);
   border-color: var(--track-a);
   color: var(--track-a);
+  box-shadow: var(--glow-accent);
+}
+
+body[data-theme="cyberpunk"] .cyber-btn-track[data-track="A"].active {
+  background: rgba(0, 229, 255, 0.2);
   box-shadow: var(--glow-cyan);
 }
+
+body[data-theme="minimal-light"] .cyber-btn-track[data-track="A"].active {
+  background: var(--track-a);
+  color: #FFFFFF;
+}
+
 .cyber-btn-track[data-track="E"].active {
-  background: rgba(255, 61, 203, 0.2);
+  background: rgba(234, 88, 12, 0.2);
   border-color: var(--track-e);
   color: var(--track-e);
 }
+
+body[data-theme="cyberpunk"] .cyber-btn-track[data-track="E"].active {
+  background: rgba(255, 122, 0, 0.25);
+  box-shadow: 0 0 10px rgba(255, 122, 0, 0.4);
+}
+
+body[data-theme="minimal-light"] .cyber-btn-track[data-track="E"].active {
+  background: var(--track-e);
+  color: #FFFFFF;
+}
+
 .cyber-btn-track[data-track="S"].active {
-  background: rgba(252, 238, 9, 0.2);
+  background: rgba(202, 138, 4, 0.2);
   border-color: var(--track-s);
   color: var(--track-s);
+}
+
+body[data-theme="cyberpunk"] .cyber-btn-track[data-track="S"].active {
+  background: rgba(252, 238, 9, 0.2);
+  box-shadow: 0 0 10px rgba(252, 238, 9, 0.35);
+}
+
+body[data-theme="minimal-light"] .cyber-btn-track[data-track="S"].active {
+  background: var(--track-s);
+  color: #FFFFFF;
 }
 
 .right-controls {
@@ -464,15 +564,18 @@ body[data-theme="minimal-light"] .cyber-btn-track[data-track="ALL"].active {
   align-items: center;
   gap: 0.4rem;
 }
+
 .cyber-btn:hover {
   background: rgba(0, 229, 255, 0.15);
   border-color: var(--track-a);
 }
+
 .cyber-btn.active {
   background: var(--track-a);
   color: #05060F;
   font-weight: 700;
 }
+
 body[data-theme="minimal-light"] .cyber-btn.active {
   color: #FFFFFF;
 }
@@ -491,6 +594,7 @@ body[data-theme="minimal-light"] .cyber-btn.active {
   color: var(--text-main);
   box-shadow: var(--panel-shadow);
 }
+
 body[data-theme="minimal-light"] .privacy-advisory-banner {
   background: #F0FDF4;
   border-color: #BBF7D0;
@@ -553,6 +657,7 @@ body[data-theme="minimal-light"] .privacy-advisory-banner {
   position: relative;
   overflow: hidden;
 }
+
 body[data-theme="minimal-light"] .cyber-progress-track {
   background: #E2E8F0;
   border-color: #CBD5E1;
@@ -607,11 +712,13 @@ body[data-theme="minimal-light"] .cyber-progress-track {
   stroke: var(--track-a);
   stroke-width: 6;
 }
+
 .track-line.track-e {
   stroke: var(--track-e);
   stroke-width: 6;
   stroke-dasharray: 2 10;
 }
+
 .track-line.track-s {
   stroke: var(--track-s);
   stroke-width: 6;
@@ -619,8 +726,11 @@ body[data-theme="minimal-light"] .cyber-progress-track {
 }
 
 @keyframes dashFlow {
-  to { stroke-dashoffset: -40; }
+  to {
+    stroke-dashoffset: -40;
+  }
 }
+
 .track-pulse {
   fill: none;
   stroke: rgba(255, 255, 255, 0.85);
@@ -629,18 +739,29 @@ body[data-theme="minimal-light"] .cyber-progress-track {
   animation: dashFlow 3s linear infinite;
   pointer-events: none;
 }
+
 body[data-theme="minimal-light"] .track-pulse,
 body[data-theme="minimal-dark"] .track-pulse,
 @media (prefers-reduced-motion: reduce) {
-  .track-pulse { display: none !important; }
+  .track-pulse {
+    display: none !important;
+  }
 }
 
 .metro-svg.filter-a .track-line:not(.track-a),
-.metro-svg.filter-a .track-pulse:not(.track-a) { opacity: 0.15; }
+.metro-svg.filter-a .track-pulse:not(.track-a) {
+  opacity: 0.15;
+}
+
 .metro-svg.filter-e .track-line:not(.track-e),
-.metro-svg.filter-e .track-pulse:not(.track-e) { opacity: 0.15; }
+.metro-svg.filter-e .track-pulse:not(.track-e) {
+  opacity: 0.15;
+}
+
 .metro-svg.filter-s .track-line:not(.track-s),
-.metro-svg.filter-s .track-pulse:not(.track-s) { opacity: 0.15; }
+.metro-svg.filter-s .track-pulse:not(.track-s) {
+  opacity: 0.15;
+}
 
 .station-node {
   cursor: pointer;
@@ -653,6 +774,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   stroke-width: 2;
   transition: stroke 0.2s, fill 0.2s, filter 0.2s;
 }
+
 .station-node:hover .station-shape {
   stroke: var(--track-a);
   filter: var(--glow-cyan);
@@ -662,10 +784,12 @@ body[data-theme="minimal-dark"] .track-pulse,
   stroke: var(--status-done) !important;
   fill: rgba(57, 255, 136, 0.15) !important;
 }
+
 .station-shape.status-working {
   stroke: var(--track-a) !important;
   fill: rgba(0, 229, 255, 0.15) !important;
 }
+
 .station-shape.status-help {
   stroke: var(--status-help) !important;
   fill: rgba(255, 176, 0, 0.15) !important;
@@ -675,9 +799,17 @@ body[data-theme="minimal-dark"] .track-pulse,
   animation: bouncePin 1.8s infinite ease-in-out;
   pointer-events: none;
 }
+
 @keyframes bouncePin {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-7px); }
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-7px);
+  }
 }
 
 .station-title-text {
@@ -688,11 +820,85 @@ body[data-theme="minimal-dark"] .track-pulse,
   text-anchor: middle;
   pointer-events: none;
 }
+
 .station-deadline-text {
   font-family: var(--font-mono);
   font-size: 11px;
   text-anchor: middle;
   pointer-events: none;
+}
+
+/* --- SPECIFICKÉ STYLY PRO SCI-FI MAPU --- */
+body[data-theme="scifi"] .station-node:hover .station-shape {
+  stroke: var(--track-a);
+  filter: drop-shadow(0 0 8px rgba(14, 165, 233, 0.6));
+}
+
+body[data-theme="scifi"] .station-title-text {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  fill: #E2E8F0;
+}
+
+body[data-theme="scifi"] .scifi-waypoint-tag {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* --- SPECIFICKÉ STYLY PRO STEAMPUNK MAPU --- */
+body[data-theme="steampunk"] .station-node:hover .station-shape {
+  stroke: #D4AF37;
+  filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.6));
+}
+
+body[data-theme="steampunk"] .station-title-text {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 14px;
+  fill: #F5EBE1;
+  letter-spacing: 0.3px;
+}
+
+body[data-theme="steampunk"] .brand-title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  letter-spacing: 0.8px;
+  color: #F5EBE1;
+}
+
+body[data-theme="steampunk"] .brand-sys {
+  color: #D4AF37;
+  letter-spacing: 1.5px;
+}
+
+body[data-theme="steampunk"] .details-title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  color: #F5EBE1;
+}
+
+body[data-theme="steampunk"] .card-question-title {
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+body[data-theme="steampunk"] .cyber-btn {
+  background: linear-gradient(180deg, #36291F 0%, #271E18 100%);
+  border: 1px solid #8B6F47;
+  color: #F5EBE1;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+body[data-theme="steampunk"] .cyber-btn:hover {
+  background: linear-gradient(180deg, #443427 0%, #31261E 100%);
+  border-color: #D4AF37;
+  color: #FFECC7;
+}
+
+body[data-theme="steampunk"] .cyber-btn.active {
+  background: linear-gradient(180deg, #D4AF37 0%, #9B782E 100%);
+  border-color: #F3E5AB;
+  color: #1A120B;
+  font-weight: 700;
 }
 
 /* --- 6. SEZNAMOVÝ POHLED (AKORDEON PRO MOBIL / TISK) --- */
@@ -720,6 +926,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   gap: 0.75rem;
   cursor: pointer;
 }
+
 .list-station-header:hover {
   background: rgba(0, 229, 255, 0.05);
 }
@@ -742,11 +949,32 @@ body[data-theme="minimal-dark"] .track-pulse,
   font-weight: 700;
   padding: 0.15rem 0.5rem;
   border-radius: 3px;
+  line-height: 1;
+}
+
+.track-badge.badge-a {
+  background: var(--track-a);
+  color: #FFFFFF;
+}
+
+body[data-theme="cyberpunk"] .track-badge.badge-a,
+body[data-theme="minimal-dark"] .track-badge.badge-a {
   color: #05060F;
 }
-.track-badge.badge-a { background: var(--track-a); }
-.track-badge.badge-e { background: var(--track-e); color: #fff; }
-.track-badge.badge-s { background: var(--track-s); color: #000; }
+
+.track-badge.badge-e {
+  background: var(--track-e);
+  color: #FFFFFF;
+}
+
+.track-badge.badge-s {
+  background: var(--track-s);
+  color: #05060F;
+}
+
+body[data-theme="minimal-light"] .track-badge.badge-s {
+  color: #FFFFFF;
+}
 
 .list-station-title {
   font-size: 1.15rem;
@@ -772,14 +1000,17 @@ body[data-theme="minimal-dark"] .track-pulse,
   border: 1px solid var(--border-neon);
   color: var(--text-muted);
 }
+
 .deadline-pill.state-overdue {
   color: var(--status-danger);
   border-color: var(--status-danger);
 }
+
 .deadline-pill.state-near {
   color: var(--status-help);
   border-color: var(--status-help);
 }
+
 .deadline-pill.state-done {
   color: var(--status-done);
   border-color: var(--status-done);
@@ -795,6 +1026,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   display: inline-flex;
   align-items: center;
 }
+
 .repo-link-icon:hover {
   background: var(--track-a);
   color: #05060F;
@@ -814,6 +1046,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   visibility: hidden;
   transition: opacity 0.25s, visibility 0.25s;
 }
+
 .details-overlay.open {
   opacity: 1;
   visibility: visible;
@@ -836,6 +1069,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   display: flex;
   flex-direction: column;
 }
+
 .details-panel.open {
   transform: translateX(0);
 }
@@ -887,6 +1121,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   border-radius: var(--card-radius);
   transition: all 0.2s;
 }
+
 .btn-close-drawer:hover {
   border-color: var(--track-a);
   color: #fff;
@@ -926,9 +1161,18 @@ body[data-theme="minimal-dark"] .track-pulse,
   width: 4px;
   height: 100%;
 }
-.formative-card.q1::before { background: var(--track-a); }
-.formative-card.q2::before { background: var(--track-e); }
-.formative-card.q3::before { background: var(--status-done); }
+
+.formative-card.q1::before {
+  background: var(--track-a);
+}
+
+.formative-card.q2::before {
+  background: var(--track-e);
+}
+
+.formative-card.q3::before {
+  background: var(--status-done);
+}
 
 .card-question-title {
   font-size: 1.15rem;
@@ -939,9 +1183,18 @@ body[data-theme="minimal-dark"] .track-pulse,
   align-items: center;
   gap: 0.5rem;
 }
-.formative-card.q1 .card-question-title { color: var(--track-a); }
-.formative-card.q2 .card-question-title { color: var(--track-e); }
-.formative-card.q3 .card-question-title { color: var(--status-done); }
+
+.formative-card.q1 .card-question-title {
+  color: var(--track-a);
+}
+
+.formative-card.q2 .card-question-title {
+  color: var(--track-e);
+}
+
+.formative-card.q3 .card-question-title {
+  color: var(--status-done);
+}
 
 /* AKORDEONY PRO CÍLE A OVĚŘENÍ CÍLŮ */
 .repo-accordion-group {
@@ -966,17 +1219,21 @@ body[data-theme="minimal-dark"] .track-pulse,
   transition: all 0.2s;
   cursor: pointer;
 }
+
 .cyber-accordion-btn:hover {
   border-color: var(--track-a);
   background: rgba(0, 229, 255, 0.08);
 }
+
 .cyber-accordion-btn.expanded {
   border-color: var(--track-a);
   background: rgba(0, 229, 255, 0.12);
 }
+
 .accordion-arrow {
   transition: transform 0.2s;
 }
+
 .cyber-accordion-btn.expanded .accordion-arrow {
   transform: rotate(180deg);
 }
@@ -993,15 +1250,18 @@ body[data-theme="minimal-dark"] .track-pulse,
   overflow-y: auto;
   color: var(--text-main);
 }
+
 .accordion-content-box ul,
 .accordion-content-box ol {
   margin-left: 1.5rem;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
+
 .accordion-content-box li {
   margin-bottom: 0.4rem;
 }
+
 .accordion-content-box strong {
   color: var(--track-a);
 }
@@ -1025,9 +1285,11 @@ body[data-theme="minimal-dark"] .track-pulse,
   font-size: 0.95rem;
   transition: all 0.2s;
 }
+
 .radio-pill-label input[type="radio"] {
   accent-color: var(--track-a);
 }
+
 .radio-pill-label.selected {
   border-color: var(--track-a);
   background: rgba(0, 229, 255, 0.15);
@@ -1051,6 +1313,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   gap: 0.65rem;
   transition: border-color 0.2s;
 }
+
 .task-card-item:hover {
   border-color: var(--track-a);
 }
@@ -1082,10 +1345,11 @@ body[data-theme="minimal-dark"] .track-pulse,
   font-weight: 600;
   font-size: 1rem;
 }
+
 .task-title-text .challenge-tag {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  background: rgba(255, 61, 203, 0.2);
+  background: rgba(234, 88, 12, 0.2);
   border: 1px solid var(--track-e);
   color: var(--track-e);
   padding: 0.1rem 0.4rem;
@@ -1121,6 +1385,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   padding: 0.35rem 0.5rem;
   border-radius: 4px;
 }
+
 .cyber-input:focus {
   border-color: var(--track-a);
   outline: none;
@@ -1136,6 +1401,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   border-radius: 4px;
   cursor: pointer;
 }
+
 .cyber-select:focus {
   border-color: var(--track-a);
   outline: none;
@@ -1153,6 +1419,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   border-radius: 4px;
   resize: vertical;
 }
+
 .task-comment-area:focus {
   border-color: var(--track-a);
   outline: none;
@@ -1171,6 +1438,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   border-radius: 4px;
   resize: vertical;
 }
+
 .cyber-textarea:focus {
   border-color: var(--status-done);
   outline: none;
@@ -1220,6 +1488,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   flex-direction: column;
   gap: 1.25rem;
 }
+
 .modal-dialog-cyber.open {
   display: flex;
 }
@@ -1234,6 +1503,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   z-index: 1999;
   display: none;
 }
+
 .modal-backdrop.open {
   display: block;
 }
@@ -1247,6 +1517,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   padding: 1rem;
   border-radius: 6px;
 }
+
 .help-guide-block h4 {
   font-size: 1.05rem;
   color: var(--track-a);
@@ -1261,6 +1532,7 @@ body[data-theme="minimal-dark"] .track-pulse,
     background: #ffffff !important;
     color: #000000 !important;
   }
+
   body::after,
   .controls-bar,
   .privacy-advisory-banner,
@@ -1268,10 +1540,12 @@ body[data-theme="minimal-dark"] .track-pulse,
   .app-footer {
     display: none !important;
   }
+
   .app-container {
     max-width: 100% !important;
     padding: 0 !important;
   }
+
   .header-cyber,
   .list-station-card {
     border: 1px solid #ccc !important;
@@ -1287,6 +1561,7 @@ body[data-theme="minimal-dark"] .track-pulse,
   .brand-title {
     font-size: 1.6rem;
   }
+
   .details-panel {
     max-width: 100%;
     top: auto;
@@ -1296,13 +1571,16 @@ body[data-theme="minimal-dark"] .track-pulse,
     border-top: 3px solid var(--track-a);
     transform: translateY(100%);
   }
+
   .details-panel.open {
     transform: translateY(0);
   }
+
   .task-main-row {
     flex-direction: column;
     align-items: flex-start;
   }
+
   .task-inputs-row {
     width: 100%;
     justify-content: space-between;
