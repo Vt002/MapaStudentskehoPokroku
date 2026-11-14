@@ -55,21 +55,8 @@
         "E": "2027-04-16",
         "S": "2027-04-16"
       }
-    },
-    "extra": {
-      "rocnikovy": [
-        {
-          "label": "1. pololetí (specifikace a koncept)",
-          "date": "2026-12-18"
-        },
-        {
-          "label": "2. pololetí (dokončení a obhajoba)",
-          "date": "2027-05-14"
-        }
-      ]
     }
   };
 
   root.SCHEDULE_DATA = SCHEDULE_DATA;
 })(typeof window !== 'undefined' ? window : global);
-

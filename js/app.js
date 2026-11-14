@@ -1,6 +1,6 @@
 /**
  * MAPA STUDENTSKÉHO POKROKU - HLAVNÍ APLIKAČNÍ LOGIKA
- * Inicializace, synchronizace termínů, interaktivní přepínače a události.
+ * Inicializace, synchronizace termínů, přepínání skinů/vzhledů, nápověda a události.
  */
 (function (root) {
   'use strict';
@@ -14,13 +14,11 @@
 
   function init() {
     console.log('[MSPApp] Inicializuji Mapu studentského pokroku...');
-    
+
     var state = storage.load();
 
-    // Aplikace klidného režimu z localStorage
-    if (state.quietMode) {
-      document.body.classList.add('quiet-mode');
-    }
+    // Nastavení aktivního skinu/tématu
+    applyTheme(state.theme || 'cyberpunk');
 
     // Načtení centrálních termínů ze schedule.json (pokud běžíme přes HTTP/HTTPS)
     syncScheduleData(function (updatedSchedule) {
@@ -36,8 +34,18 @@
     renderAllViews();
   }
 
+  function applyTheme(themeName) {
+    var validThemes = ['cyberpunk', 'minimal-light', 'minimal-dark', 'scifi-rpg'];
+    var activeTheme = validThemes.indexOf(themeName) !== -1 ? themeName : 'cyberpunk';
+    document.body.setAttribute('data-theme', activeTheme);
+    var sel = document.getElementById('theme-selector');
+    if (sel) {
+      sel.value = activeTheme;
+    }
+  }
+
   /**
-   * Pokus o stažení schedule.json z URL určené v config.js
+   * Pokus o načtení termínů (nejprve z editoru vyučujícího v localStorage, pak stažení či zrcadlo)
    */
   function syncScheduleData(callback) {
     var isHttp = window.location.protocol === 'http:' || window.location.protocol === 'https:';
@@ -45,11 +53,38 @@
     var url = config.SCHEDULE_URL;
     var timeoutMs = config.FETCH_TIMEOUT_MS || 3500;
 
+    // 1. Zkontrolujeme, zda existují lokálně uložené úpravy termínů z Editoru vyučujícího
+    var teacherSchedule = null;
+    try {
+      var raw = localStorage.getItem('msp:teacher_schedule');
+      if (raw) {
+        var parsed = JSON.parse(raw);
+        if (parsed && parsed.deadlines) {
+          teacherSchedule = parsed;
+        }
+      }
+    } catch (e) { /* ignore */ }
+
+    // Pokud vyučující v tomto prohlížeči upravil termíny, mají okamžitou prioritu
+    if (teacherSchedule) {
+      return callback(teacherSchedule);
+    }
+
+    // 2. Pokud běžíme lokálně z disku (file://)
     if (!isHttp || !url) {
-      // Běžíme z file:// nebo není URL -> použijeme data/schedule.js
+      try {
+        var cachedRaw = localStorage.getItem('msp:cached_schedule');
+        if (cachedRaw) {
+          var cachedParsed = JSON.parse(cachedRaw);
+          if (cachedParsed && cachedParsed.deadlines) {
+            return callback(cachedParsed);
+          }
+        }
+      } catch (e) { /* ignore */ }
       return callback(scheduleData);
     }
 
+    // 3. Pokus o stažení centrálního schedule.json přes síť
     var controller = new AbortController();
     var timer = setTimeout(function () {
       controller.abort();
@@ -94,7 +129,7 @@
   }
 
   /**
-   * Kompletní překreslení mapy, seznamu, ukazatele pokroku a extra projektu
+   * Kompletní překreslení mapy, seznamu a ukazatele pokroku
    */
   function renderAllViews() {
     var state = storage.load();
@@ -142,15 +177,12 @@
       render.renderListView(listContainer, mapData, scheduleData, state, openStationDetails);
     }
 
-    // 5. Ukazatel pokroku trati (pouze když je zvolen obor A, E, S)
+    // 5. Ukazatel pokroku trati (A, E, S)
     if (trackProgressContainer) {
       renderTrackProgress(trackProgressContainer, state);
     }
 
-    // 6. Vykreslení Ročníkového projektu
-    renderExtraProject(state);
-
-    // 7. Pokud je otevřen detail, zaktualizovat jeho obsah
+    // 6. Pokud je otevřen detail, zaktualizovat jeho obsah
     if (currentActiveStationId) {
       var panel = document.getElementById('details-drawer');
       if (panel && panel.classList.contains('open')) {
@@ -194,30 +226,6 @@
     if (pctEl) pctEl.textContent = pct + '%';
   }
 
-  function renderExtraProject(state) {
-    var extraSection = document.getElementById('extra-project-section');
-    if (!extraSection) return;
-
-    var pDef = mapData.extra.rocnikovy;
-    var pRec = (state.extra && state.extra.rocnikovy) || { status: 'not_started', tasks: {} };
-    var deadlines = (scheduleData.extra && scheduleData.extra.rocnikovy) || [];
-
-    var d1 = deadlines[0] ? render.formatDateCZ(deadlines[0].date, true) : '18. 12. 2026';
-    var d2 = deadlines[1] ? render.formatDateCZ(deadlines[1].date, true) : '14. 5. 2027';
-
-    var d1Span = extraSection.querySelector('#rp-deadline-1');
-    var d2Span = extraSection.querySelector('#rp-deadline-2');
-    if (d1Span) d1Span.textContent = d1;
-    if (d2Span) d2Span.textContent = d2;
-
-    var btnOpenRP = extraSection.querySelector('#btn-open-rocnikovy');
-    if (btnOpenRP) {
-      btnOpenRP.onclick = function () {
-        openStationDetails('rocnikovy');
-      };
-    }
-  }
-
   /**
    * Otevření a obsluha detailního panelu
    */
@@ -234,7 +242,6 @@
     panel.classList.add('open');
     panel.setAttribute('aria-hidden', 'false');
 
-    // Focus na zavírací tlačítko pro přístupnost
     var btnClose = panel.querySelector('#btn-close-drawer');
     if (btnClose) btnClose.focus();
   }
@@ -268,14 +275,6 @@
       onTaskChange: function (stId, taskId, taskPatch) {
         storage.updateTask(stId, taskId, taskPatch);
         renderAllViews();
-      },
-      onAddCustomTask: function (stId, taskTitle) {
-        storage.addCustomTask(stId, taskTitle);
-        renderAllViews();
-      },
-      onRemoveCustomTask: function (stId, taskId) {
-        storage.removeCustomTask(stId, taskId);
-        renderAllViews();
       }
     });
   }
@@ -296,7 +295,19 @@
       });
     });
 
-    // 2. Přepínač pohledu Mapa / Seznam
+    // 2. Přepínač skinu / vzhledu (Cyberpunk, Minimal světlý, Minimal tmavý, Sci-fi RPG)
+    var themeSel = document.getElementById('theme-selector');
+    if (themeSel) {
+      themeSel.addEventListener('change', function () {
+        var selectedTheme = themeSel.value;
+        applyTheme(selectedTheme);
+        var state = storage.load();
+        state.theme = selectedTheme;
+        storage.save(state);
+      });
+    }
+
+    // 3. Přepínač pohledu Mapa / Seznam
     var btnViewMap = document.getElementById('btn-view-map');
     var btnViewList = document.getElementById('btn-view-list');
     if (btnViewMap) {
@@ -316,33 +327,46 @@
       });
     }
 
-    // 3. Přepínač Klidného režimu (Quiet Mode)
-    var btnQuiet = document.getElementById('btn-toggle-quiet-mode');
-    if (btnQuiet) {
-      btnQuiet.addEventListener('click', function () {
-        var isQuiet = document.body.classList.toggle('quiet-mode');
-        var state = storage.load();
-        state.quietMode = isQuiet;
-        storage.save(state);
-        btnQuiet.textContent = isQuiet ? '⚡ Cyberpunk režim' : '🍃 Klidný režim';
-      });
-      // Inicializace textu
-      var initState = storage.load();
-      btnQuiet.textContent = initState.quietMode ? '⚡ Cyberpunk režim' : '🍃 Klidný režim';
+    // 4. Okno Nápovědy
+    var btnOpenHelp = document.getElementById('btn-open-help');
+    var helpModal = document.getElementById('help-modal');
+    var modalBackdrop = document.getElementById('modal-backdrop');
+    var btnCloseHelp = document.getElementById('btn-close-help');
+
+    function openHelpModal() {
+      if (helpModal && modalBackdrop) {
+        helpModal.classList.add('open');
+        modalBackdrop.classList.add('open');
+      }
+    }
+    function closeHelpModal() {
+      if (helpModal && modalBackdrop) {
+        helpModal.classList.remove('open');
+        modalBackdrop.classList.remove('open');
+      }
     }
 
-    // 4. Zavření draweru kliknutím do overlaye nebo klávesou Esc
+    if (btnOpenHelp) btnOpenHelp.addEventListener('click', openHelpModal);
+    if (btnCloseHelp) btnCloseHelp.addEventListener('click', closeHelpModal);
+
+    // 5. Zavření draweru kliknutím do overlaye nebo klávesou Esc
     var overlay = document.getElementById('details-overlay');
     if (overlay) {
       overlay.addEventListener('click', closeStationDetails);
     }
     window.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && currentActiveStationId) {
-        closeStationDetails();
+      if (e.key === 'Escape') {
+        if (helpModal && helpModal.classList.contains('open')) {
+          closeHelpModal();
+        } else if (currentActiveStationId) {
+          closeStationDetails();
+        } else {
+          closePrivacyModal();
+        }
       }
     });
 
-    // 5. Export a Import dat
+    // 6. Export a Import dat
     var btnExport = document.getElementById('btn-export-data');
     if (btnExport) {
       btnExport.addEventListener('click', function () {
@@ -355,7 +379,6 @@
     if (btnImport && fileInput) {
       btnImport.addEventListener('click', function () {
         var modal = document.getElementById('privacy-warning-modal');
-        var modalBackdrop = document.getElementById('modal-backdrop');
         if (modal && modalBackdrop) {
           modal.classList.add('open');
           modalBackdrop.classList.add('open');
@@ -395,7 +418,7 @@
       });
     }
 
-    // 6. Reset dat (Smazat vše)
+    // 7. Reset dat (Smazat vše)
     var btnClear = document.getElementById('btn-clear-all-data');
     if (btnClear) {
       btnClear.addEventListener('click', function () {
@@ -416,7 +439,6 @@
     if (modalBackdrop) modalBackdrop.classList.remove('open');
   }
 
-  // Spuštění po načtení DOMu
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
@@ -424,4 +446,3 @@
   }
 
 })(typeof window !== 'undefined' ? window : global);
-

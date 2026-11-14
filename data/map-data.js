@@ -87,8 +87,7 @@
         tasks: [
           { id: '1', title: '1 Klíčové pojmy a principy číslicových I/O periferií', challenge: false },
           { id: '2', title: '2 Dimenzování předřadného rezistoru LED a elektrické zapojení I/O', challenge: false }
-        ],
-        allowCustomTasks: true
+        ]
       },
       'iot': {
         id: 'iot',
@@ -144,8 +143,7 @@
         tasks: [
           { id: '1', title: '1 Klíčové pojmy a principy číslicových I/O periferií', challenge: false },
           { id: '2', title: '2 Dimenzování předřadného rezistoru LED a elektrické zapojení I/O', challenge: false }
-        ],
-        allowCustomTasks: true
+        ]
       },
       'senzory': {
         id: 'senzory',
@@ -186,23 +184,8 @@
           { id: '3', title: '3 Diagnostika řídící jednotky', challenge: false }
         ]
       }
-    },
-    extra: {
-      'rocnikovy': {
-        id: 'rocnikovy',
-        title: 'Ročníkový projekt',
-        repo: 'Rocnikovy-projekt',
-        subpath: '',
-        description: 'Samostatná inženýrská práce studenta v průběhu celého školního roku.',
-        gradingType: 'points', // 0-30 b za část
-        tasks: [
-          { id: '1', title: '1. pololetí: Zadání, specifikace požadavků a úvodní řešení (0–30 b)', maxPoints: 30 },
-          { id: '2', title: '2. pololetí: Realizace, ověření funkce, technická zpráva a obhajoba (0–30 b)', maxPoints: 30 }
-        ]
-      }
     }
   };
 
   root.MAP_DATA = MAP_DATA;
 })(typeof window !== 'undefined' ? window : global);
-

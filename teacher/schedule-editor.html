@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,48 +14,59 @@
       background: var(--bg-panel);
       border: 1px solid var(--border-neon);
       clip-path: var(--corner-clip-lg);
+      border-radius: var(--card-radius);
       display: flex;
       flex-direction: column;
       gap: 1.5rem;
     }
+
     .editor-toolbar {
       display: flex;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 0.85rem;
       align-items: center;
       background: var(--bg-panel-alt);
-      padding: 1rem;
-      border-radius: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 1rem 1.25rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-neon);
     }
+
     .editor-table {
       width: 100%;
       border-collapse: collapse;
       font-size: 0.95rem;
     }
-    .editor-table th, .editor-table td {
-      padding: 0.6rem 0.8rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    .editor-table th,
+    .editor-table td {
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid var(--border-neon);
       text-align: left;
     }
+
     .editor-table th {
       background: rgba(255, 255, 255, 0.04);
       font-family: var(--font-mono);
       color: var(--text-muted);
     }
+
     .output-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
     }
+
     @media (max-width: 800px) {
-      .output-grid { grid-template-columns: 1fr; }
+      .output-grid {
+        grid-template-columns: 1fr;
+      }
     }
+
     .code-box {
       font-family: var(--font-mono);
       font-size: 0.85rem;
       width: 100%;
-      height: 260px;
+      height: 240px;
       background: #05060F;
       border: 1px solid var(--border-neon);
       color: #39FF88;
@@ -62,36 +74,66 @@
       border-radius: 4px;
       white-space: pre;
     }
-    .validation-alert {
-      padding: 0.75rem 1rem;
-      border-radius: 4px;
-      font-family: var(--font-mono);
-      font-size: 0.85rem;
+
+    .save-alert-box {
+      padding: 0.85rem 1.25rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
       display: none;
+      line-height: 1.5;
     }
-    .validation-alert.warn {
-      display: block;
-      background: rgba(255, 176, 0, 0.15);
-      border: 1px solid var(--status-help);
-      color: #FFDE7A;
-    }
-    .validation-alert.success {
+
+    .save-alert-box.success {
       display: block;
       background: rgba(57, 255, 136, 0.15);
       border: 1px solid var(--status-done);
       color: #8DFFB8;
     }
+
+    .save-alert-box.warn {
+      display: block;
+      background: rgba(255, 176, 0, 0.15);
+      border: 1px solid var(--status-help);
+      color: #FFDE7A;
+    }
+
+    .info-card {
+      background: rgba(0, 229, 255, 0.05);
+      border: 1px solid var(--border-neon);
+      border-left: 4px solid var(--track-a);
+      padding: 1rem 1.25rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
   </style>
 </head>
-<body>
+
+<body data-theme="cyberpunk">
 
   <div class="editor-container">
     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
       <div>
-        <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--track-e); letter-spacing: 2px;">TEACHER SYS // SCHEDULE CONFIG</div>
+        <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--track-e); letter-spacing: 2px;">
+          TEACHER SYS // SCHEDULE CONFIG</div>
         <h1 style="font-size: 1.8rem; font-weight: 700;">Editor termínů dokončení témat</h1>
       </div>
-      <a class="cyber-btn" href="../index.html">← Zpět na Mapu pokroku</a>
+      <a class="cyber-btn" href="../index.html" style="font-size: 0.95rem; font-weight: 700;">← Zpět na Mapu pokroku</a>
+    </div>
+
+    <!-- Oznámení o stavu uložení -->
+    <div id="save-status-box" class="save-alert-box"></div>
+
+    <!-- Návod jak ukládání funguje -->
+    <div class="info-card">
+      <strong>💡 Jak funguje ukládání:</strong>
+      <ol style="margin-left: 1.5rem; margin-top: 0.4rem;">
+        <li><strong>Okamžitě v tomto prohlížeči:</strong> Klikněte na zelené tlačítko <strong>„💾 Uložit termíny v
+            prohlížeči“</strong>. Změny se ihned uloží a po návratu na Mapu pokroku uvidíte nové termíny.</li>
+        <li><strong>Trvale pro studenty na GitHubu:</strong> Prohlížeč z bezpečnostních důvodů nesmí sám přepisovat
+          soubory na disku. Pro trvalé zveřejnění na GitHubu klikněte níže na <strong>„Stáhnout schedule.json“</strong>
+          a <strong>„Stáhnout schedule.js“</strong> a nahraďte jimi soubory ve složce <code>data/</code>.</li>
+      </ol>
     </div>
 
     <div class="editor-toolbar">
@@ -101,44 +143,40 @@
       </div>
 
       <div style="display: flex; align-items: center; gap: 0.5rem;">
-        <label class="control-label" for="input-shift-days">Posunout vše o:</label>
-        <input type="number" id="input-shift-days" class="cyber-input" style="width: 80px;" value="7">
+        <label class="control-label" for="input-shift-days">Posunout o:</label>
+        <input type="number" id="input-shift-days" class="cyber-input" style="width: 70px;" value="7">
         <span class="control-label">dní</span>
-        <button class="cyber-btn" id="btn-shift-dates" type="button">Posunout termíny</button>
+        <button class="cyber-btn" id="btn-shift-dates" type="button">Posunout</button>
       </div>
 
-      <button class="cyber-btn" id="btn-new-year" type="button" style="border-color: var(--track-e);">Nový školní rok (vynulovat)</button>
-      <button class="cyber-btn active" id="btn-generate-export" type="button">Vygenerovat kód</button>
-    </div>
+      <button class="cyber-btn" id="btn-save-browser" type="button"
+        style="background: rgba(57, 255, 136, 0.2); border-color: var(--status-done); color: var(--status-done); font-weight: 700;">
+        💾 Uložit termíny v prohlížeči
+      </button>
 
-    <div id="validation-box" class="validation-alert"></div>
+      <button class="cyber-btn" id="btn-reset-default" type="button"
+        style="border-color: var(--status-help); color: var(--status-help);"
+        title="Vymazat lokální změny v prohlížeči a obnovit ze souboru">
+        🔄 Obnovit ze souboru
+      </button>
+
+      <button class="cyber-btn" id="btn-new-year" type="button" style="border-color: var(--track-e);">
+        Vynulovat termíny
+      </button>
+    </div>
 
     <table class="editor-table">
       <thead>
         <tr>
           <th>Téma (Stanice)</th>
-          <th style="color: var(--track-a); width: 180px;">Obor A</th>
-          <th style="color: var(--track-e); width: 180px;">Obor E</th>
-          <th style="color: var(--track-s); width: 180px;">Obor S</th>
+          <th style="color: var(--track-a); width: 190px;">Obor A</th>
+          <th style="color: var(--track-e); width: 190px;">Obor E</th>
+          <th style="color: var(--track-s); width: 190px;">Obor S</th>
         </tr>
       </thead>
       <tbody id="editor-table-body">
       </tbody>
     </table>
-
-    <div style="background: var(--bg-panel-alt); padding: 1rem; border-radius: 4px; border: 1px solid rgba(255, 61, 203, 0.3);">
-      <h3 style="font-size: 1.1rem; color: var(--track-e); margin-bottom: 0.75rem;">Ročníkový projekt (termíny odevzdání etap)</h3>
-      <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
-        <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-          <label class="control-label" for="rp-date-1">1. pololetí (specifikace a koncept):</label>
-          <input type="date" id="rp-date-1" class="cyber-input" value="2026-12-18">
-        </div>
-        <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-          <label class="control-label" for="rp-date-2">2. pololetí (dokončení a obhajoba):</label>
-          <input type="date" id="rp-date-2" class="cyber-input" value="2027-05-14">
-        </div>
-      </div>
-    </div>
 
     <div class="output-grid">
       <div style="display: flex; flex-direction: column; gap: 0.5rem;">
@@ -146,7 +184,8 @@
           <span class="control-label" style="color: var(--track-a);">data/schedule.json</span>
           <div style="display: flex; gap: 0.4rem;">
             <button class="cyber-btn" id="btn-copy-json" type="button">Kopírovat</button>
-            <button class="cyber-btn" id="btn-download-json" type="button">Stáhnout</button>
+            <button class="cyber-btn" id="btn-download-json" type="button"
+              style="font-weight: 700; border-color: var(--track-a);">Stáhnout schedule.json</button>
           </div>
         </div>
         <textarea id="output-json" class="code-box" readonly></textarea>
@@ -157,7 +196,8 @@
           <span class="control-label" style="color: var(--track-e);">data/schedule.js (zrcadlo)</span>
           <div style="display: flex; gap: 0.4rem;">
             <button class="cyber-btn" id="btn-copy-js" type="button">Kopírovat</button>
-            <button class="cyber-btn" id="btn-download-js" type="button">Stáhnout</button>
+            <button class="cyber-btn" id="btn-download-js" type="button"
+              style="font-weight: 700; border-color: var(--track-e);">Stáhnout schedule.js</button>
           </div>
         </div>
         <textarea id="output-js" class="code-box" readonly></textarea>
@@ -171,18 +211,36 @@
   <script>
     (function () {
       var mapData = window.MAP_DATA;
-      var currentSchedule = window.SCHEDULE_DATA || {};
       var tbody = document.getElementById('editor-table-body');
-      var valBox = document.getElementById('validation-box');
+      var statusBox = document.getElementById('save-status-box');
 
       var stationIds = [
         'vyber', 'dio-mcu', 'iot', 'vyvojove', 'plc',
         'dio-plc', 'senzory', 'regulace', 'bezpecnost'
       ];
 
+      // 1. Načtení stávajících termínů (nejprve z localStorage, pak ze souboru)
+      function loadInitialSchedule() {
+        try {
+          var raw = localStorage.getItem('msp:teacher_schedule') || localStorage.getItem('msp:cached_schedule');
+          if (raw) {
+            var parsed = JSON.parse(raw);
+            if (parsed && parsed.deadlines) {
+              return parsed;
+            }
+          }
+        } catch (e) { }
+        return window.SCHEDULE_DATA || {};
+      }
+
+      var currentSchedule = loadInitialSchedule();
+
       function buildTable() {
         tbody.innerHTML = '';
         var deadlines = currentSchedule.deadlines || {};
+        if (currentSchedule.schoolYear) {
+          document.getElementById('input-school-year').value = currentSchedule.schoolYear;
+        }
 
         stationIds.forEach(function (stId) {
           var st = mapData.stations[stId];
@@ -204,7 +262,6 @@
             inDate.setAttribute('data-station', stId);
             inDate.setAttribute('data-track', trk);
 
-            // Ověříme, zda je téma v trase oboru
             var isInTrack = mapData.tracks[trk].stations.indexOf(stId) !== -1;
             if (!isInTrack) {
               inDate.disabled = true;
@@ -215,6 +272,10 @@
               inDate.value = val;
             }
 
+            inDate.addEventListener('change', function () {
+              updateOutputs();
+            });
+
             td.appendChild(inDate);
             tr.appendChild(td);
           });
@@ -223,7 +284,7 @@
         });
       }
 
-      function getFormDeadlines() {
+      function getFormScheduleObject() {
         var deadlines = {};
         stationIds.forEach(function (stId) {
           deadlines[stId] = { A: null, E: null, S: null };
@@ -239,68 +300,60 @@
             deadlines[stId][trk] = inp.value ? inp.value : null;
           }
         });
-        return deadlines;
-      }
-
-      function validateChronology(deadlines) {
-        var warnings = [];
-        ['A', 'E', 'S'].forEach(function (trk) {
-          var stations = mapData.tracks[trk].stations;
-          var lastDate = null;
-          var lastSt = null;
-
-          stations.forEach(function (sId) {
-            var curDate = deadlines[sId] && deadlines[sId][trk];
-            if (curDate) {
-              if (lastDate && curDate < lastDate) {
-                warnings.push('Obor ' + trk + ': termín pro "' + mapData.stations[sId].title + '" (' + curDate + ') je dříve než předchozí téma "' + mapData.stations[lastSt].title + '" (' + lastDate + ').');
-              }
-              lastDate = curDate;
-              lastSt = sId;
-            }
-          });
-        });
-
-        if (warnings.length > 0) {
-          valBox.className = 'validation-alert warn';
-          valBox.innerHTML = '<strong>Varování k chronologii termínů:</strong><br>' + warnings.join('<br>');
-        } else {
-          valBox.className = 'validation-alert success';
-          valBox.innerHTML = 'Pořadí termínů v jednotlivých tratích je logicky vzestupné (OK).';
-        }
-      }
-
-      function generateExports() {
-        var deadlines = getFormDeadlines();
-        validateChronology(deadlines);
 
         var schoolYear = document.getElementById('input-school-year').value.trim() || '2026/2027';
         var today = new Date().toISOString().slice(0, 10);
 
-        var rp1 = document.getElementById('rp-date-1').value || '2026-12-18';
-        var rp2 = document.getElementById('rp-date-2').value || '2027-05-14';
-
-        var schedObj = {
+        return {
           schemaVersion: 1,
           schoolYear: schoolYear,
           updatedAt: today,
-          deadlines: deadlines,
-          extra: {
-            rocnikovy: [
-              { label: '1. pololetí (specifikace a koncept)', date: rp1 },
-              { label: '2. pololetí (dokončení a obhajoba)', date: rp2 }
-            ]
-          }
+          deadlines: deadlines
         };
+      }
 
+      function updateOutputs() {
+        var schedObj = getFormScheduleObject();
         var jsonStr = JSON.stringify(schedObj, null, 2);
         document.getElementById('output-json').value = jsonStr;
 
         var jsStr = '/**\n * ZRCADLO SCHEDULE.JSON PRO LOKÁLNÍ OTEVŘENÍ PŘES FILE://\n * Tento soubor je generován/udržován ve shodě s schedule.json.\n */\n(function (root) {\n  \'use strict\';\n\n  var SCHEDULE_DATA = ' + jsonStr + ';\n\n  root.SCHEDULE_DATA = SCHEDULE_DATA;\n})(typeof window !== \'undefined\' ? window : global);\n';
         document.getElementById('output-js').value = jsStr;
+        return schedObj;
       }
 
-      // Event listener: Posun o N dní
+      // Uložení do prohlížeče (localStorage)
+      function saveToLocalStorage() {
+        var schedObj = updateOutputs();
+        try {
+          var jsonStr = JSON.stringify(schedObj);
+          localStorage.setItem('msp:teacher_schedule', jsonStr);
+          localStorage.setItem('msp:cached_schedule', jsonStr);
+
+          statusBox.className = 'save-alert-box success';
+          statusBox.innerHTML = '✅ <strong>Termíny byly úspěšně uloženy v tomto prohlížeči!</strong><br>Když se nyní vrátíte na Mapu pokroku tlačítkem vpravo nahoře, ihned uvidíte nové termíny.';
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (err) {
+          statusBox.className = 'save-alert-box warn';
+          statusBox.innerHTML = '⚠️ Chyba při ukládání do prohlížeče: ' + err.message;
+        }
+      }
+
+      document.getElementById('btn-save-browser').addEventListener('click', saveToLocalStorage);
+
+      // Obnovit původní ze souboru schedule.js
+      document.getElementById('btn-reset-default').addEventListener('click', function () {
+        if (!confirm('Opravdu chcete zrušit lokální změny v prohlížeči a obnovit termíny ze souboru schedule.js?')) return;
+        localStorage.removeItem('msp:teacher_schedule');
+        localStorage.removeItem('msp:cached_schedule');
+        currentSchedule = window.SCHEDULE_DATA || {};
+        buildTable();
+        updateOutputs();
+        statusBox.className = 'save-alert-box success';
+        statusBox.innerHTML = '🔄 Lokální úpravy byly smazány. Byly načteny výchozí termíny ze souboru.';
+      });
+
+      // Posun o N dní
       document.getElementById('btn-shift-dates').addEventListener('click', function () {
         var days = parseInt(document.getElementById('input-shift-days').value, 10);
         if (isNaN(days) || days === 0) return;
@@ -313,20 +366,18 @@
             inp.value = d.toISOString().slice(0, 10);
           }
         });
-        generateExports();
+        saveToLocalStorage();
       });
 
-      // Event listener: Nový školní rok
+      // Vynulovat
       document.getElementById('btn-new-year').addEventListener('click', function () {
-        if (!confirm('Opravdu chcete vyčistit všechny termíny pro nový školní rok?')) return;
+        if (!confirm('Opravdu chcete vyčistit všechny termíny?')) return;
         var inputs = tbody.querySelectorAll('.date-input');
         inputs.forEach(function (inp) { inp.value = ''; });
-        generateExports();
+        saveToLocalStorage();
       });
 
-      document.getElementById('btn-generate-export').addEventListener('click', generateExports);
-
-      // Kopírování a stahování
+      // Kopírování a stahování souborů
       document.getElementById('btn-copy-json').addEventListener('click', function () {
         navigator.clipboard.writeText(document.getElementById('output-json').value);
         alert('Obsah schedule.json zkopírován do schránky.');
@@ -357,9 +408,9 @@
 
       // Inicializace
       buildTable();
-      generateExports();
+      updateOutputs();
     })();
   </script>
 </body>
-</html>
 
+</html>

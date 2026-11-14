@@ -3,7 +3,7 @@
   "exportedAt": "2026-11-13T10:00:00Z",
   "selectedTrack": "A",
   "manualCurrentStationId": "iot",
-  "quietMode": false,
+  "theme": "cyberpunk",
   "stations": {
     "vyber": {
       "status": "done",
@@ -16,21 +16,18 @@
         "1": {
           "done": true,
           "date": "2026-09-15",
-          "level": 3,
           "grade": "výborně",
           "comment": "Jasné rozlišení architektur MCU vs. PLC."
         },
         "2": {
           "done": true,
           "date": "2026-09-22",
-          "level": 2,
           "grade": "1-",
           "comment": "Doplněno správné IP krytí pro průmyslové prostředí."
         },
         "3": {
           "done": true,
           "date": "2026-09-29",
-          "level": 3,
           "grade": "1",
           "comment": "Rozhodovací matice platforem vypracována velmi přehledně."
         }
@@ -47,14 +44,12 @@
         "1": {
           "done": true,
           "date": "2026-10-08",
-          "level": 3,
           "grade": "1",
           "comment": "Pochopen princip pull-up a pull-down rezistorů."
         },
         "2": {
           "done": true,
           "date": "2026-10-15",
-          "level": 2,
           "grade": "1-",
           "comment": "Správný výpočet Ohmova zákona pro LED."
         }
@@ -71,44 +66,22 @@
         "1": {
           "done": true,
           "date": "2026-10-30",
-          "level": 3,
           "grade": "1",
           "comment": "Kvalitní rešerše IoT protokolů."
         },
         "2": {
           "done": true,
           "date": "2026-11-05",
-          "level": 2,
           "grade": "2+",
           "comment": "Dopracovat JSON serializaci zpráv."
         },
         "3": {
           "done": false,
           "date": "",
-          "level": 0,
           "grade": "",
-          "comment": "Zapojení hotovo, ladí se firmware."
-        }
-      }
-    }
-  },
-  "extra": {
-    "rocnikovy": {
-      "status": "working",
-      "selfAssessment": "with_help",
-      "nextStep": "Dokončit funkční blokové schéma rozvaděče",
-      "notes": "Téma: Monitorovací stanice fotovoltaické elektrárny",
-      "updatedAt": "2026-11-10T09:00:00Z",
-      "tasks": {
-        "1": {
-          "done": false,
-          "date": "",
-          "level": 2,
-          "grade": "22/30 b",
-          "comment": "Úvodní rešerše a specifikace schválena."
+          "comment": "Zapojení hotovo, ladí se firmware na nepájivém poli."
         }
       }
     }
   }
 }
-

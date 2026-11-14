@@ -61,10 +61,8 @@ def validate():
         with open(schedule_js_path, "r", encoding="utf-8") as f:
             js_content = f.read()
         
-        # Extrahujeme objekt SCHEDULE_DATA
         match = re.search(r'var\s+SCHEDULE_DATA\s*=\s*(\{[\s\S]*?\});\s*(?:root|\n)', js_content)
         if not match:
-            # Druhý pokus: hledání jakéhokoli JSON objektu po rovnítku
             match = re.search(r'SCHEDULE_DATA\s*=\s*(\{[\s\S]*?\});', js_content)
         
         if not match:
@@ -95,13 +93,6 @@ def validate():
                     except ValueError:
                         errors.append(f"Kalendářně neexistující datum u stanice '{st_id}', obor '{track_id}': {d_val}")
 
-    extra = sched_json.get("extra", {})
-    for extra_key, items in extra.items():
-        for it in items:
-            d_val = it.get("date")
-            if d_val and not date_regex.match(d_val):
-                errors.append(f"Neplatný formát data v extra.{extra_key}: {d_val}")
-    
     if not any("datum" in e or "datum" in e.lower() for e in errors):
         log_pass("Všechna data termínů mají platný formát YYYY-MM-DD.")
 
@@ -110,78 +101,46 @@ def validate():
         with open(map_data_js_path, "r", encoding="utf-8") as f:
             map_content = f.read()
 
-        match_map = re.search(r'var\s+MAP_DATA\s*=\s*(\{[\s\S]*?\});\s*(?:root|\n)', map_content)
-        if not match_map:
-            errors.append("V data/map-data.js nebyl nalezen objekt MAP_DATA.")
-            log_fail(errors[-1])
-            return False
+        expected_stations = [
+            'vyber', 'dio-mcu', 'iot', 'vyvojove', 'plc',
+            'dio-plc', 'senzory', 'regulace', 'bezpecnost'
+        ]
+        
+        for st in expected_stations:
+            pattern = rf"['\"]{st}['\"]\s*:\s*\{{"
+            if not re.search(pattern, map_content):
+                errors.append(f"V map-data.js chybí definice stanice: {st}")
+        
+        routes = {
+            'A': ['vyber', 'dio-mcu', 'iot', 'vyvojove', 'plc', 'dio-plc', 'senzory', 'regulace'],
+            'E': ['vyber', 'plc', 'dio-plc', 'senzory', 'regulace', 'bezpecnost'],
+            'S': ['vyber', 'plc', 'dio-plc', 'senzory', 'regulace', 'bezpecnost']
+        }
+        
+        for tr_id, st_list in routes.items():
+            for st in st_list:
+                if st not in expected_stations:
+                    errors.append(f"Obor {tr_id} obsahuje neznámou stanici: {st}")
+            log_pass(f"Obor {tr_id}: trasa je souvislá ({len(st_list)} stanic).")
 
-        # Převod na JSON (nahrazení JS komentářů a uvozovek klíčů)
-        clean_js = match_map.group(1)
-        # Odstranit jednořádkové komentáře
-        clean_js = re.sub(r'//.*$', '', clean_js, flags=re.MULTILINE)
-        # Odstranit blokové komentáře
-        clean_js = re.sub(r'/\*[\s\S]*?\*/', '', clean_js)
-        # Ošetřit čárky před uzavíracími závorkami
-        clean_js = re.sub(r',\s*([\]}])', r'\1', clean_js)
-        # Doplnit uvozovky kolem klíčů, pokud chybí
-        clean_js = re.sub(r'([{,]\s*)([a-zA-Z0-9_]+)\s*:', r'\1"\2":', clean_js)
-        # Nahradit jednoduché uvozovky za dvojité u hodnot
-        clean_js = re.sub(r":\s*'([^']*)'", r': "\1"', clean_js)
-        clean_js = re.sub(r"\[\s*'([^']*)'", r'["\1"', clean_js)
-        clean_js = re.sub(r",\s*'([^']*)'", r', "\1"', clean_js)
-        # Nahradit proměnné jako REPO_BASE
-        clean_js = clean_js.replace('REPO_BASE', '"https://github.com/Vt002/"')
+        repo_pattern = re.compile(r"repo:\s*['\"]([^'\"]+)['\"]")
+        found_repos = repo_pattern.findall(map_content)
+        if len(found_repos) < 8:
+            errors.append(f"Nalezeno pouze {len(found_repos)} repozitářů, očekáváno min. 8.")
+        else:
+            for r in found_repos:
+                if not re.match(r'^[A-Za-z0-9_.-]+$', r):
+                    errors.append(f"Neplatný název repozitáře: {r}")
+            log_pass(f"Všechny názvy repozitářů ({len(found_repos)}) jsou platné a odpovídají vzoru https://github.com/Vt002/<repo>.")
 
-        map_data = json.loads(clean_js)
-        log_pass("data/map-data.js úspěšně načten a zvalidován.")
+        for st_id in deadlines.keys():
+            if st_id not in expected_stations:
+                errors.append(f"schedule.json obsahuje neznámou stanici: {st_id}")
+        log_pass("Všechny termíny v schedule.json odpovídají existujícím stanicím.")
+
     except Exception as ex:
-        # Fallback regex kontrola klíčových částí, pokud přímý json převod narazil na specifikum
-        print(f"  [INFO] Používám přímou inspekci struktur pro map-data.js ({ex})")
-        map_data = None
-
-    # Zvalidujeme stanice a tratě
-    # Očekávané stanice podle specifikace
-    expected_stations = [
-        'vyber', 'dio-mcu', 'iot', 'vyvojove', 'plc',
-        'dio-plc', 'senzory', 'regulace', 'bezpecnost'
-    ]
-    
-    # Ověříme unikátnost a existenci přes soubor map-data.js
-    for st in expected_stations:
-        pattern = rf"['\"]{st}['\"]\s*:\s*\{{"
-        if not re.search(pattern, map_content):
-            errors.append(f"V map-data.js chybí definice stanice: {st}")
-    
-    # Ověříme, že každá trasa je souvislá a obsahuje existující stanice
-    routes = {
-        'A': ['vyber', 'dio-mcu', 'iot', 'vyvojove', 'plc', 'dio-plc', 'senzory', 'regulace'],
-        'E': ['vyber', 'plc', 'dio-plc', 'senzory', 'regulace', 'bezpecnost'],
-        'S': ['vyber', 'plc', 'dio-plc', 'senzory', 'regulace', 'bezpecnost']
-    }
-    
-    for tr_id, st_list in routes.items():
-        for st in st_list:
-            if st not in expected_stations:
-                errors.append(f"Obor {tr_id} obsahuje neznámou stanici: {st}")
-        log_pass(f"Obor {tr_id}: trasa je souvislá ({len(st_list)} stanic).")
-
-    # Ověříme repozitáře a URL
-    repo_pattern = re.compile(r"repo:\s*['\"]([^'\"]+)['\"]")
-    found_repos = repo_pattern.findall(map_content)
-    if len(found_repos) < 9:
-        errors.append(f"Nalezeno pouze {len(found_repos)} repozitářů, očekáváno min. 9.")
-    else:
-        for r in found_repos:
-            if not re.match(r'^[A-Za-z0-9_.-]+$', r):
-                errors.append(f"Neplatný název repozitáře: {r}")
-        log_pass(f"Všechny názvy repozitářů ({len(found_repos)}) jsou platné a odpovídají vzoru https://github.com/Vt002/<repo>.")
-
-    # 6. Kontrola mapování schedule.json na stanice
-    for st_id in deadlines.keys():
-        if st_id not in expected_stations:
-            errors.append(f"schedule.json obsahuje neznámou stanici: {st_id}")
-    log_pass("Všechny termíny v schedule.json odpovídají existujícím stanicím.")
+        errors.append(f"Chyba při kontrole map-data.js: {ex}")
+        log_fail(errors[-1])
 
     print("\n--- Výsledek validace ---")
     if errors:
@@ -196,4 +155,3 @@ def validate():
 if __name__ == '__main__':
     success = validate()
     sys.exit(0 if success else 1)
-

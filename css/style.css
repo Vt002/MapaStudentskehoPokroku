@@ -1,11 +1,9 @@
 /* ==========================================================================
-   MAPA STUDENTSKÉHO POKROKU - CYBERPUNK HUD DESIGN SYSTEM
-   Statický CSS bez frameworků, WCAG 2.1 AA přístupný, plná podpora latin-ext
+   MAPA STUDENTSKÉHO POKROKU - DESIGN SYSTEM SE 4 SKINY
+   1. Cyberpunk (výchozí) | 2. Minimalistický světlý | 3. Minimalistický tmavý | 4. Sci-fi RPG hra
    ========================================================================== */
 
 /* --- 1. TYPOGRAFIE A LOKÁLNÍ FONTY --- */
-
-/* Rajdhani - Latin & Latin-Ext */
 @font-face {
   font-family: 'Rajdhani';
   font-style: normal;
@@ -34,7 +32,6 @@
   unicode-range: U+0000-00FF, U+0100-02AF, U+1E00-1EFF;
 }
 
-/* JetBrains Mono - Latin & Latin-Ext */
 @font-face {
   font-family: 'JetBrains Mono';
   font-style: normal;
@@ -63,12 +60,13 @@
   unicode-range: U+0000-00FF, U+0100-02AF, U+1E00-1EFF;
 }
 
-/* --- 2. CSS PROMĚNNÉ --- */
-:root {
+/* --- 2. TÉMATA / SKINY (CSS PROMĚNNÉ) --- */
+
+/* VÝCHOZÍ: CYBERPUNK */
+:root, body[data-theme="cyberpunk"] {
   --font-main: 'Rajdhani', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', Consolas, "Courier New", monospace;
 
-  /* Cyberpunk paleta */
   --bg-deep: #05060F;
   --bg-dark: #0B0D1F;
   --bg-panel: #0F1230;
@@ -79,40 +77,124 @@
   --text-muted: #9BB0D3;
   --text-dim: #5C6E91;
 
-  /* Obory a akcenty */
   --track-a: #00E5FF; /* Cyan */
   --track-e: #FF3DCB; /* Magenta */
   --track-s: #FCEE09; /* Acid Yellow */
 
-  --status-done: #39FF88;     /* Neon Green */
-  --status-working: #00E5FF;  /* Cyan */
-  --status-waiting: #9BB0D3;  /* Muted */
-  --status-help: #FFB000;     /* Amber */
-  --status-danger: #FF3366;   /* Red-Pink */
+  --status-done: #39FF88;
+  --status-working: #00E5FF;
+  --status-waiting: #9BB0D3;
+  --status-help: #FFB000;
+  --status-danger: #FF3366;
 
   --border-neon: rgba(0, 229, 255, 0.3);
   --glow-cyan: 0 0 12px rgba(0, 229, 255, 0.45);
-  --glow-magenta: 0 0 12px rgba(255, 61, 203, 0.45);
-  --glow-yellow: 0 0 12px rgba(252, 238, 9, 0.45);
+  --glow-accent: 0 0 10px rgba(0, 229, 255, 0.35);
 
   --corner-clip: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
   --corner-clip-lg: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  --card-radius: 0px;
+  --panel-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --has-scanlines: 1;
 }
 
-/* Klidný režim (Quiet Mode) */
-body.quiet-mode {
-  --bg-deep: #0E111B;
-  --bg-dark: #141926;
-  --bg-panel: #1A2133;
-  --bg-panel-alt: #222B42;
-  --text-main: #F0F4FC;
-  --text-muted: #B4C2DC;
-  --text-dim: #7B8CA8;
+/* 2. MINIMALISTICKÝ SVĚTLÝ */
+body[data-theme="minimal-light"] {
+  --bg-deep: #F1F5F9;
+  --bg-dark: #E2E8F0;
+  --bg-panel: #FFFFFF;
+  --bg-panel-alt: #F8FAFC;
+  --bg-overlay: rgba(15, 23, 42, 0.6);
 
-  --border-neon: #3A4766;
-  --glow-cyan: none !important;
-  --glow-magenta: none !important;
-  --glow-yellow: none !important;
+  --text-main: #0F172A;
+  --text-muted: #475569;
+  --text-dim: #94A3B8;
+
+  --track-a: #0284C7; /* Sky blue */
+  --track-e: #C026D3; /* Fuchsia */
+  --track-s: #B45309; /* Amber brown pro světlé pozadí */
+
+  --status-done: #16A34A;
+  --status-working: #0284C7;
+  --status-waiting: #64748B;
+  --status-help: #D97706;
+  --status-danger: #DC2626;
+
+  --border-neon: #CBD5E1;
+  --glow-cyan: none;
+  --glow-accent: none;
+
+  --corner-clip: none;
+  --corner-clip-lg: none;
+  --card-radius: 8px;
+  --panel-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+  --has-scanlines: 0;
+}
+
+/* 3. MINIMALISTICKÝ TMAVÝ */
+body[data-theme="minimal-dark"] {
+  --bg-deep: #0B0F19;
+  --bg-dark: #111827;
+  --bg-panel: #1E293B;
+  --bg-panel-alt: #283548;
+  --bg-overlay: rgba(0, 0, 0, 0.75);
+
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --text-dim: #64748B;
+
+  --track-a: #38BDF8;
+  --track-e: #F472B6;
+  --track-s: #FACC15;
+
+  --status-done: #4ADE80;
+  --status-working: #38BDF8;
+  --status-waiting: #94A3B8;
+  --status-help: #FBBF24;
+  --status-danger: #F87171;
+
+  --border-neon: #334155;
+  --glow-cyan: none;
+  --glow-accent: none;
+
+  --corner-clip: none;
+  --corner-clip-lg: none;
+  --card-radius: 8px;
+  --panel-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  --has-scanlines: 0;
+}
+
+/* 4. SCI-FI RPG HRA */
+body[data-theme="scifi-rpg"] {
+  --bg-deep: #030712;
+  --bg-dark: #0A1128;
+  --bg-panel: #0D1B3E;
+  --bg-panel-alt: #132452;
+  --bg-overlay: rgba(2, 6, 23, 0.9);
+
+  --text-main: #F1F5F9;
+  --text-muted: #A5B4FC;
+  --text-dim: #6366F1;
+
+  --track-a: #06B6D4; /* Cyan holo */
+  --track-e: #EC4899; /* Plasma pink */
+  --track-s: #F59E0B; /* Quest Gold */
+
+  --status-done: #10B981;
+  --status-working: #3B82F6;
+  --status-waiting: #64748B;
+  --status-help: #F59E0B;
+  --status-danger: #EF4444;
+
+  --border-neon: rgba(245, 158, 11, 0.4);
+  --glow-cyan: 0 0 14px rgba(6, 182, 212, 0.5);
+  --glow-accent: 0 0 12px rgba(245, 158, 11, 0.4);
+
+  --corner-clip: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  --corner-clip-lg: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  --card-radius: 0px;
+  --panel-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+  --has-scanlines: 1;
 }
 
 /* --- 3. RESET A ZÁKLADNÍ PRVKY --- */
@@ -134,15 +216,14 @@ body {
   font-size: 1.05rem;
   line-height: 1.5;
   background-color: var(--bg-deep);
-  background-image: 
-    radial-gradient(ellipse at 50% 0%, rgba(15, 26, 68, 0.5) 0%, transparent 70%),
-    linear-gradient(rgba(11, 13, 31, 0.95), var(--bg-deep));
+  color: var(--text-main);
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-/* Scanlines overlay */
+/* Scanlines overlay (pouze pro Cyberpunk a Sci-fi RPG) */
 body::after {
   content: "";
   position: fixed;
@@ -159,31 +240,29 @@ body::after {
   );
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.75;
+  opacity: 0.7;
+  display: block;
 }
 
-body.quiet-mode::after {
+body[data-theme="minimal-light"]::after,
+body[data-theme="minimal-dark"]::after {
   display: none !important;
 }
 
-/* Přístupný focus */
 :focus-visible {
   outline: 2px solid var(--track-a);
   outline-offset: 3px;
 }
 
-/* Odkazy */
 a {
   color: var(--track-a);
   text-decoration: none;
   transition: color 0.2s, text-shadow 0.2s;
 }
 a:hover {
-  color: #fff;
-  text-shadow: var(--glow-cyan);
+  text-decoration: underline;
 }
 
-/* Tlačítka */
 button {
   font-family: var(--font-main);
   cursor: pointer;
@@ -193,27 +272,27 @@ button {
   font-size: 1rem;
 }
 
-/* --- 4. ROZVRŽENÍ STRÁNKY --- */
+/* --- 4. HLAVNÍ KONTEJNER A HLAVIČKA --- */
 .app-container {
   max-width: 1480px;
   margin: 0 auto;
   padding: 1.25rem 1.5rem 4rem 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 1.5rem;
 }
 
-/* Hlavička */
 .header-cyber {
   background: var(--bg-panel);
   border: 1px solid var(--border-neon);
   clip-path: var(--corner-clip-lg);
+  border-radius: var(--card-radius);
   padding: 1.25rem 1.75rem;
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--panel-shadow);
 }
 
 .header-cyber::before {
@@ -241,7 +320,7 @@ button {
 
 .brand-sys {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   letter-spacing: 2px;
   color: var(--track-a);
   text-transform: uppercase;
@@ -253,7 +332,7 @@ button {
   letter-spacing: 1px;
   text-transform: uppercase;
   color: var(--text-main);
-  text-shadow: 0 0 10px rgba(0, 229, 255, 0.35);
+  text-shadow: var(--glow-accent);
   line-height: 1.1;
 }
 
@@ -262,11 +341,18 @@ button {
   color: var(--text-muted);
 }
 
+.header-meta-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
 .schedule-sync-pill {
   font-family: var(--font-mono);
   font-size: 0.8rem;
   background: rgba(0, 229, 255, 0.08);
-  border: 1px solid rgba(0, 229, 255, 0.3);
+  border: 1px solid var(--border-neon);
   padding: 0.35rem 0.75rem;
   border-radius: 4px;
   display: inline-flex;
@@ -280,10 +366,9 @@ button {
   height: 8px;
   border-radius: 50%;
   background-color: var(--status-done);
-  box-shadow: 0 0 8px var(--status-done);
 }
 
-/* Řídicí panel filtru oborů */
+/* Řídicí panel: výběr oboru, přepínač skinů a zobrazení */
 .controls-bar {
   display: flex;
   justify-content: space-between;
@@ -293,34 +378,24 @@ button {
   padding-top: 0.75rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
-
-.track-selector-group {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-}
-
-.control-label {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text-muted);
+body[data-theme="minimal-light"] .controls-bar {
+  border-top: 1px solid #E2E8F0;
 }
 
 .track-btn-group {
   display: flex;
   gap: 0.4rem;
+  flex-wrap: wrap;
 }
 
 .cyber-btn-track {
   font-family: var(--font-mono);
   font-weight: 700;
-  padding: 0.4rem 0.9rem;
+  padding: 0.45rem 1rem;
   background: var(--bg-panel-alt);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border-neon);
   clip-path: var(--corner-clip);
+  border-radius: var(--card-radius);
   transition: all 0.2s;
   display: inline-flex;
   align-items: center;
@@ -328,10 +403,15 @@ button {
 }
 
 .cyber-btn-track[data-track="ALL"].active {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #fff;
-  color: #fff;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--text-main);
+  color: var(--text-main);
 }
+body[data-theme="minimal-light"] .cyber-btn-track[data-track="ALL"].active {
+  background: #0F172A;
+  color: #FFFFFF;
+}
+
 .cyber-btn-track[data-track="A"].active {
   background: rgba(0, 229, 255, 0.2);
   border-color: var(--track-a);
@@ -342,28 +422,42 @@ button {
   background: rgba(255, 61, 203, 0.2);
   border-color: var(--track-e);
   color: var(--track-e);
-  box-shadow: var(--glow-magenta);
 }
 .cyber-btn-track[data-track="S"].active {
   background: rgba(252, 238, 9, 0.2);
   border-color: var(--track-s);
   color: var(--track-s);
-  box-shadow: var(--glow-yellow);
 }
 
-.view-controls {
+.right-controls {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.theme-selector-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.control-label {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
 }
 
 .cyber-btn {
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  padding: 0.4rem 0.8rem;
+  padding: 0.4rem 0.85rem;
   background: var(--bg-panel-alt);
   border: 1px solid var(--border-neon);
   clip-path: var(--corner-clip);
+  border-radius: var(--card-radius);
   color: var(--text-main);
   transition: all 0.2s;
   display: inline-flex;
@@ -373,18 +467,46 @@ button {
 .cyber-btn:hover {
   background: rgba(0, 229, 255, 0.15);
   border-color: var(--track-a);
-  color: #fff;
 }
 .cyber-btn.active {
   background: var(--track-a);
   color: #05060F;
   font-weight: 700;
 }
+body[data-theme="minimal-light"] .cyber-btn.active {
+  color: #FFFFFF;
+}
+
+/* Banner upozornění na soukromí pro studenty */
+.privacy-advisory-banner {
+  background: rgba(0, 229, 255, 0.05);
+  border: 1px solid var(--border-neon);
+  border-left: 4px solid var(--track-a);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--card-radius);
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  box-shadow: var(--panel-shadow);
+}
+body[data-theme="minimal-light"] .privacy-advisory-banner {
+  background: #F0FDF4;
+  border-color: #BBF7D0;
+  border-left-color: #16A34A;
+  color: #166534;
+}
+
+.advisory-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
 
 /* Ukazatel pokroku trati */
 .track-progress-banner {
   background: var(--bg-panel-alt);
-  border: 1px solid rgba(0, 229, 255, 0.2);
+  border: 1px solid var(--border-neon);
   padding: 0.85rem 1.25rem;
   display: flex;
   align-items: center;
@@ -392,6 +514,7 @@ button {
   flex-wrap: wrap;
   gap: 1rem;
   clip-path: var(--corner-clip);
+  border-radius: var(--card-radius);
 }
 
 .progress-info {
@@ -401,12 +524,9 @@ button {
 }
 
 .progress-title {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--text-main);
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
 }
 
 .progress-meta {
@@ -427,55 +547,45 @@ button {
 .cyber-progress-track {
   flex: 1;
   height: 10px;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--border-neon);
+  border-radius: 4px;
   position: relative;
   overflow: hidden;
+}
+body[data-theme="minimal-light"] .cyber-progress-track {
+  background: #E2E8F0;
+  border-color: #CBD5E1;
 }
 
 .cyber-progress-fill {
   height: 100%;
   width: 0%;
   background: linear-gradient(90deg, var(--track-a), var(--status-done));
-  box-shadow: 0 0 10px var(--status-done);
   transition: width 0.4s ease-out;
 }
 
 .progress-percent {
   font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 700;
   min-width: 45px;
   text-align: right;
   color: var(--status-done);
 }
 
-/* --- 5. METRO MAPA (INLINE SVG) --- */
+/* --- 5. METRO MAPA (SVG) --- */
 .map-viewport {
   background: var(--bg-panel);
   border: 1px solid var(--border-neon);
   clip-path: var(--corner-clip-lg);
+  border-radius: var(--card-radius);
   position: relative;
   overflow-x: auto;
   overflow-y: hidden;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7);
+  box-shadow: var(--panel-shadow);
   padding: 1.5rem 0.5rem;
   -webkit-overflow-scrolling: touch;
-}
-
-/* HUD mřížka v pozadí SVG */
-.map-viewport::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    linear-gradient(rgba(0, 229, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 229, 255, 0.04) 1px, transparent 1px);
-  background-size: 32px 32px;
-  pointer-events: none;
 }
 
 .metro-svg {
@@ -486,12 +596,11 @@ button {
   font-family: var(--font-main);
 }
 
-/* Metro linie */
 .track-line {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: opacity 0.3s, stroke-width 0.3s;
+  transition: opacity 0.3s;
 }
 
 .track-line.track-a {
@@ -501,19 +610,16 @@ button {
 .track-line.track-e {
   stroke: var(--track-e);
   stroke-width: 6;
-  stroke-dasharray: 2 10; /* Tečkovaná */
+  stroke-dasharray: 2 10;
 }
 .track-line.track-s {
   stroke: var(--track-s);
   stroke-width: 6;
-  stroke-dasharray: 12 6 2 6; /* Čerchovaná */
+  stroke-dasharray: 12 6 2 6;
 }
 
-/* Pulzující proud dat na tratích */
 @keyframes dashFlow {
-  to {
-    stroke-dashoffset: -40;
-  }
+  to { stroke-dashoffset: -40; }
 }
 .track-pulse {
   fill: none;
@@ -523,44 +629,27 @@ button {
   animation: dashFlow 3s linear infinite;
   pointer-events: none;
 }
-body.quiet-mode .track-pulse,
+body[data-theme="minimal-light"] .track-pulse,
+body[data-theme="minimal-dark"] .track-pulse,
 @media (prefers-reduced-motion: reduce) {
-  .track-pulse {
-    display: none !important;
-  }
+  .track-pulse { display: none !important; }
 }
 
-/* Ztlumení neaktivních tratí při zvolení oboru */
 .metro-svg.filter-a .track-line:not(.track-a),
-.metro-svg.filter-a .track-pulse:not(.track-a) {
-  opacity: 0.15;
-}
+.metro-svg.filter-a .track-pulse:not(.track-a) { opacity: 0.15; }
 .metro-svg.filter-e .track-line:not(.track-e),
-.metro-svg.filter-e .track-pulse:not(.track-e) {
-  opacity: 0.15;
-}
+.metro-svg.filter-e .track-pulse:not(.track-e) { opacity: 0.15; }
 .metro-svg.filter-s .track-line:not(.track-s),
-.metro-svg.filter-s .track-pulse:not(.track-s) {
-  opacity: 0.15;
-}
+.metro-svg.filter-s .track-pulse:not(.track-s) { opacity: 0.15; }
 
-/* Stanice v SVG */
 .station-node {
   cursor: pointer;
   transition: transform 0.2s;
 }
-.station-node:focus-visible {
-  outline: none;
-}
-.station-node:focus-visible .station-shape {
-  stroke: #fff !important;
-  stroke-width: 3px !important;
-  filter: drop-shadow(0 0 8px #fff) !important;
-}
 
 .station-shape {
   fill: var(--bg-panel);
-  stroke: #5C6E91;
+  stroke: var(--text-dim);
   stroke-width: 2;
   transition: stroke 0.2s, fill 0.2s, filter 0.2s;
 }
@@ -571,18 +660,17 @@ body.quiet-mode .track-pulse,
 
 .station-shape.status-done {
   stroke: var(--status-done) !important;
-  fill: #082618 !important;
+  fill: rgba(57, 255, 136, 0.15) !important;
 }
 .station-shape.status-working {
   stroke: var(--track-a) !important;
-  fill: #092433 !important;
+  fill: rgba(0, 229, 255, 0.15) !important;
 }
 .station-shape.status-help {
   stroke: var(--status-help) !important;
-  fill: #2B1D05 !important;
+  fill: rgba(255, 176, 0, 0.15) !important;
 }
 
-/* Pin "Jsem tady" */
 .pin-here {
   animation: bouncePin 1.8s infinite ease-in-out;
   pointer-events: none;
@@ -591,14 +679,7 @@ body.quiet-mode .track-pulse,
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-7px); }
 }
-body.quiet-mode .pin-here,
-@media (prefers-reduced-motion: reduce) {
-  .pin-here {
-    animation: none !important;
-  }
-}
 
-/* Popisky v SVG */
 .station-title-text {
   font-family: var(--font-main);
   font-weight: 700;
@@ -610,7 +691,6 @@ body.quiet-mode .pin-here,
 .station-deadline-text {
   font-family: var(--font-mono);
   font-size: 11px;
-  fill: var(--text-muted);
   text-anchor: middle;
   pointer-events: none;
 }
@@ -627,7 +707,8 @@ body.quiet-mode .pin-here,
   background: var(--bg-panel);
   border: 1px solid var(--border-neon);
   clip-path: var(--corner-clip);
-  transition: border-color 0.2s;
+  border-radius: var(--card-radius);
+  box-shadow: var(--panel-shadow);
 }
 
 .list-station-header {
@@ -638,7 +719,6 @@ body.quiet-mode .pin-here,
   flex-wrap: wrap;
   gap: 0.75rem;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.02);
 }
 .list-station-header:hover {
   background: rgba(0, 229, 255, 0.05);
@@ -660,13 +740,13 @@ body.quiet-mode .pin-here,
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 700;
-  padding: 0.15rem 0.45rem;
+  padding: 0.15rem 0.5rem;
   border-radius: 3px;
   color: #05060F;
 }
 .track-badge.badge-a { background: var(--track-a); }
-.track-badge.badge-e { background: var(--track-e); }
-.track-badge.badge-s { background: var(--track-s); }
+.track-badge.badge-e { background: var(--track-e); color: #fff; }
+.track-badge.badge-s { background: var(--track-s); color: #000; }
 
 .list-station-title {
   font-size: 1.15rem;
@@ -687,28 +767,29 @@ body.quiet-mode .pin-here,
   align-items: center;
   gap: 0.4rem;
   padding: 0.25rem 0.6rem;
-  border-radius: 3px;
+  border-radius: 4px;
   background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-neon);
   color: var(--text-muted);
 }
 .deadline-pill.state-overdue {
-  color: #FFA07A;
-  border: 1px solid rgba(255, 160, 122, 0.4);
+  color: var(--status-danger);
+  border-color: var(--status-danger);
 }
 .deadline-pill.state-near {
   color: var(--status-help);
-  border: 1px solid rgba(255, 176, 0, 0.4);
+  border-color: var(--status-help);
 }
 .deadline-pill.state-done {
   color: var(--status-done);
-  border: 1px solid rgba(57, 255, 136, 0.4);
+  border-color: var(--status-done);
 }
 
 .repo-link-icon {
   font-family: var(--font-mono);
   font-size: 0.95rem;
   padding: 0.25rem 0.5rem;
-  border: 1px solid rgba(0, 229, 255, 0.3);
+  border: 1px solid var(--border-neon);
   border-radius: 3px;
   color: var(--track-a);
   display: inline-flex;
@@ -719,7 +800,7 @@ body.quiet-mode .pin-here,
   color: #05060F;
 }
 
-/* --- 7. POSTRANNÍ PANEL PODROBNOSTÍ (DRAWER / POPOVER) --- */
+/* --- 7. POSTRANNÍ PANEL PODROBNOSTÍ (DRAWER) --- */
 .details-overlay {
   position: fixed;
   top: 0;
@@ -743,7 +824,7 @@ body.quiet-mode .pin-here,
   top: 0;
   right: 0;
   width: 100%;
-  max-width: 780px;
+  max-width: 820px;
   height: 100vh;
   background: var(--bg-panel);
   border-left: 2px solid var(--track-a);
@@ -803,12 +884,12 @@ body.quiet-mode .pin-here,
   background: var(--bg-panel);
   color: var(--text-muted);
   clip-path: var(--corner-clip);
+  border-radius: var(--card-radius);
   transition: all 0.2s;
 }
 .btn-close-drawer:hover {
   border-color: var(--track-a);
   color: #fff;
-  background: rgba(0, 229, 255, 0.15);
 }
 
 .details-tags-row {
@@ -818,16 +899,6 @@ body.quiet-mode .pin-here,
   gap: 0.5rem;
 }
 
-.canvas-tag {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.15rem 0.45rem;
-  border-radius: 2px;
-  color: var(--text-muted);
-}
-
 .details-content {
   padding: 1.5rem;
   display: flex;
@@ -835,11 +906,11 @@ body.quiet-mode .pin-here,
   gap: 1.75rem;
 }
 
-/* Sekce tří otázek formativního hodnocení */
 .formative-card {
-  background: rgba(11, 13, 31, 0.7);
-  border: 1px solid rgba(0, 229, 255, 0.2);
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border-neon);
   clip-path: var(--corner-clip);
+  border-radius: var(--card-radius);
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
@@ -852,7 +923,7 @@ body.quiet-mode .pin-here,
   position: absolute;
   top: 0;
   left: 0;
-  width: 3px;
+  width: 4px;
   height: 100%;
 }
 .formative-card.q1::before { background: var(--track-a); }
@@ -872,32 +943,70 @@ body.quiet-mode .pin-here,
 .formative-card.q2 .card-question-title { color: var(--track-e); }
 .formative-card.q3 .card-question-title { color: var(--status-done); }
 
-/* Otázka 1: Kam směřuji */
-.q1-links {
+/* AKORDEONY PRO CÍLE A OVĚŘENÍ CÍLŮ */
+.repo-accordion-group {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 0.75rem;
 }
-.cyber-anchor-btn {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  padding: 0.45rem 0.85rem;
-  background: var(--bg-panel-alt);
-  border: 1px solid var(--border-neon);
-  border-radius: 3px;
-  display: inline-flex;
+
+.cyber-accordion-btn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.65rem 1rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border-neon);
+  border-radius: var(--card-radius);
   color: var(--text-main);
   transition: all 0.2s;
+  cursor: pointer;
 }
-.cyber-anchor-btn:hover {
-  background: rgba(0, 229, 255, 0.15);
+.cyber-accordion-btn:hover {
   border-color: var(--track-a);
-  color: #fff;
+  background: rgba(0, 229, 255, 0.08);
+}
+.cyber-accordion-btn.expanded {
+  border-color: var(--track-a);
+  background: rgba(0, 229, 255, 0.12);
+}
+.accordion-arrow {
+  transition: transform 0.2s;
+}
+.cyber-accordion-btn.expanded .accordion-arrow {
+  transform: rotate(180deg);
 }
 
-/* Otázka 2: Kde jsem - Stav a sebehodnocení */
+.accordion-content-box {
+  background: var(--bg-deep);
+  border: 1px solid var(--border-neon);
+  border-top: none;
+  padding: 1rem 1.25rem;
+  border-radius: 0 0 6px 6px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-height: 380px;
+  overflow-y: auto;
+  color: var(--text-main);
+}
+.accordion-content-box ul,
+.accordion-content-box ol {
+  margin-left: 1.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.accordion-content-box li {
+  margin-bottom: 0.4rem;
+}
+.accordion-content-box strong {
+  color: var(--track-a);
+}
+
+/* Otázka 2: Stav a sebehodnocení */
 .status-pill-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -908,10 +1017,10 @@ body.quiet-mode .pin-here,
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: var(--bg-panel-alt);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: var(--bg-panel);
+  border: 1px solid var(--border-neon);
   padding: 0.5rem 0.75rem;
-  border-radius: 4px;
+  border-radius: var(--card-radius);
   cursor: pointer;
   font-size: 0.95rem;
   transition: all 0.2s;
@@ -919,111 +1028,134 @@ body.quiet-mode .pin-here,
 .radio-pill-label input[type="radio"] {
   accent-color: var(--track-a);
 }
-.radio-pill-label:hover {
-  border-color: var(--track-a);
-}
 .radio-pill-label.selected {
   border-color: var(--track-a);
   background: rgba(0, 229, 255, 0.15);
   font-weight: 700;
 }
 
-/* Tabulka úloh */
-.tasks-table-wrap {
-  width: 100%;
-  overflow-x: auto;
+/* NOVÉ ROZVRŽENÍ ÚLOH S VELKÝM KOMENTÁŘEM */
+.tasks-container-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
 }
 
-.cyber-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.95rem;
+.task-card-item {
+  background: var(--bg-panel);
+  border: 1px solid var(--border-neon);
+  border-radius: var(--card-radius);
+  padding: 0.85rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  transition: border-color 0.2s;
+}
+.task-card-item:hover {
+  border-color: var(--track-a);
 }
 
-.cyber-table th,
-.cyber-table td {
-  padding: 0.65rem 0.75rem;
-  text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+.task-main-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
-.cyber-table th {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.task-title-cell {
-  font-weight: 600;
-  max-width: 260px;
-}
-.task-title-cell .challenge-tag {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  background: rgba(255, 61, 203, 0.2);
-  border: 1px solid var(--track-e);
-  color: var(--track-e);
-  padding: 0.1rem 0.4rem;
-  border-radius: 2px;
-  margin-left: 0.4rem;
-  display: inline-block;
+.task-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex: 1;
+  min-width: 250px;
 }
 
 .cyber-checkbox {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   accent-color: var(--status-done);
   cursor: pointer;
 }
 
-.cyber-select,
+.task-title-text {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.task-title-text .challenge-tag {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background: rgba(255, 61, 203, 0.2);
+  border: 1px solid var(--track-e);
+  color: var(--track-e);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+  margin-left: 0.4rem;
+}
+
+.task-inputs-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.task-input-field {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.task-mini-label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
 .cyber-input {
   font-family: var(--font-mono);
   font-size: 0.85rem;
   background: var(--bg-panel-alt);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--border-neon);
   color: var(--text-main);
   padding: 0.35rem 0.5rem;
-  border-radius: 3px;
-  transition: border-color 0.2s;
-  width: 100%;
+  border-radius: 4px;
 }
-.cyber-select:focus,
 .cyber-input:focus {
   border-color: var(--track-a);
   outline: none;
 }
 
-.task-summary-banner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 0.8rem;
-  background: rgba(255, 255, 255, 0.04);
+.cyber-select {
   font-family: var(--font-mono);
   font-size: 0.85rem;
-  color: var(--text-muted);
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border-neon);
+  color: var(--text-main);
+  padding: 0.35rem 0.6rem;
   border-radius: 4px;
+  cursor: pointer;
+}
+.cyber-select:focus {
+  border-color: var(--track-a);
+  outline: none;
 }
 
-.btn-add-task {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  padding: 0.35rem 0.7rem;
-  background: rgba(0, 229, 255, 0.1);
-  border: 1px dashed var(--track-a);
-  color: var(--track-a);
-  border-radius: 3px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
+.task-comment-area {
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  width: 100%;
+  min-height: 48px;
+  background: var(--bg-deep);
+  border: 1px solid var(--border-neon);
+  color: var(--text-main);
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  resize: vertical;
 }
-.btn-add-task:hover {
-  background: var(--track-a);
-  color: #05060F;
+.task-comment-area:focus {
+  border-color: var(--track-a);
+  outline: none;
 }
 
 /* Otázka 3: Jak dál - Textové oblasti */
@@ -1032,8 +1164,8 @@ body.quiet-mode .pin-here,
   font-size: 1rem;
   width: 100%;
   min-height: 85px;
-  background: var(--bg-panel-alt);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--bg-deep);
+  border: 1px solid var(--border-neon);
   color: var(--text-main);
   padding: 0.75rem;
   border-radius: 4px;
@@ -1044,50 +1176,14 @@ body.quiet-mode .pin-here,
   outline: none;
 }
 
-/* --- 8. KARTA ROČNÍKOVÝ PROJEKT --- */
-.extra-project-section {
-  background: var(--bg-panel);
-  border: 1px solid rgba(255, 61, 203, 0.35);
-  clip-path: var(--corner-clip-lg);
-  padding: 1.5rem 1.75rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  position: relative;
-}
-
-.extra-project-section::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--track-e);
-}
-
-.extra-project-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.extra-deadlines-bar {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-/* --- 9. PATIČKA A EXPORT/IMPORT MODAL --- */
+/* --- 8. PATIČKA A MODÁLNÍ OKNA --- */
 .app-footer {
   margin-top: 2rem;
   padding: 1.5rem;
   background: var(--bg-panel);
   border: 1px solid var(--border-neon);
   clip-path: var(--corner-clip);
+  border-radius: var(--card-radius);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1112,14 +1208,17 @@ body.quiet-mode .pin-here,
   background: var(--bg-panel);
   border: 2px solid var(--track-a);
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
-  padding: 1.75rem;
-  max-width: 520px;
+  padding: 2rem;
+  max-width: 640px;
   width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
   z-index: 2000;
   clip-path: var(--corner-clip-lg);
+  border-radius: var(--card-radius);
   display: none;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 .modal-dialog-cyber.open {
   display: flex;
@@ -1139,16 +1238,24 @@ body.quiet-mode .pin-here,
   display: block;
 }
 
-.privacy-warning-box {
-  background: rgba(255, 51, 102, 0.1);
-  border-left: 3px solid var(--status-danger);
-  padding: 0.75rem 1rem;
-  font-size: 0.85rem;
-  color: #FFB3BA;
-  line-height: 1.4;
+.help-guide-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--bg-panel-alt);
+  border: 1px solid var(--border-neon);
+  padding: 1rem;
+  border-radius: 6px;
+}
+.help-guide-block h4 {
+  font-size: 1.05rem;
+  color: var(--track-a);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
-/* --- 10. TISKOVÝ STYL (@media print) --- */
+/* --- 9. TISKOVÝ STYL --- */
 @media print {
   body {
     background: #ffffff !important;
@@ -1156,7 +1263,7 @@ body.quiet-mode .pin-here,
   }
   body::after,
   .controls-bar,
-  .btn-add-task,
+  .privacy-advisory-banner,
   .footer-actions,
   .app-footer {
     display: none !important;
@@ -1166,33 +1273,16 @@ body.quiet-mode .pin-here,
     padding: 0 !important;
   }
   .header-cyber,
-  .list-station-card,
-  .extra-project-section {
+  .list-station-card {
     border: 1px solid #ccc !important;
     background: #fff !important;
     box-shadow: none !important;
     clip-path: none !important;
     color: #000 !important;
   }
-  .brand-title {
-    color: #000 !important;
-    text-shadow: none !important;
-  }
-  .track-progress-banner {
-    display: none !important;
-  }
-  .details-panel {
-    position: static !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-    transform: none !important;
-    box-shadow: none !important;
-    border: 1px solid #ccc !important;
-  }
 }
 
-/* --- 11. RESPONZIVITA (MOBIL A TABLET) --- */
+/* --- 10. RESPONZIVITA --- */
 @media (max-width: 768px) {
   .brand-title {
     font-size: 1.6rem;
@@ -1201,7 +1291,7 @@ body.quiet-mode .pin-here,
     max-width: 100%;
     top: auto;
     bottom: 0;
-    height: 88vh;
+    height: 90vh;
     border-left: none;
     border-top: 3px solid var(--track-a);
     transform: translateY(100%);
@@ -1209,26 +1299,12 @@ body.quiet-mode .pin-here,
   .details-panel.open {
     transform: translateY(0);
   }
-  .cyber-table,
-  .cyber-table tbody,
-  .cyber-table tr,
-  .cyber-table td {
-    display: block;
+  .task-main-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .task-inputs-row {
     width: 100%;
-  }
-  .cyber-table thead {
-    display: none;
-  }
-  .cyber-table tr {
-    margin-bottom: 0.85rem;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 0.6rem;
-    border-radius: 4px;
-  }
-  .cyber-table td {
-    border-bottom: none;
-    padding: 0.35rem 0;
+    justify-content: space-between;
   }
 }
-
