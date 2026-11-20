@@ -264,7 +264,16 @@
 
           // Název stanice
           var tdTitle = document.createElement('td');
-          tdTitle.innerHTML = '<strong>' + st.title + '</strong> <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);">' + stId + '</span>';
+          var tdStrong = document.createElement('strong');
+          tdStrong.textContent = st.title;
+          tdTitle.appendChild(tdStrong);
+          var tdIdSpan = document.createElement('span');
+          tdIdSpan.style.fontFamily = 'var(--font-mono)';
+          tdIdSpan.style.fontSize = '0.75rem';
+          tdIdSpan.style.color = 'var(--text-dim)';
+          tdIdSpan.textContent = stId;
+          tdTitle.appendChild(document.createTextNode(' '));
+          tdTitle.appendChild(tdIdSpan);
           tr.appendChild(tdTitle);
 
           // Obor A, E, S
