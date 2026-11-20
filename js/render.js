@@ -39,6 +39,29 @@
     return Math.ceil(diffMs / (1000 * 60 * 60 * 24));
   }
 
+  function wrapStationTitle(title, maxLines, maxChars) {
+    var words = String(title).trim().split(/\s+/);
+    var lines = [];
+    var cur = '';
+    for (var i = 0; i < words.length; i++) {
+      var w = words[i];
+      if (cur && (cur + ' ' + w).length > maxChars) {
+        lines.push(cur);
+        cur = w;
+      } else {
+        cur = cur ? cur + ' ' + w : w;
+      }
+    }
+    if (cur) lines.push(cur);
+    if (lines.length > maxLines) {
+      var last = lines.slice(0, maxLines - 1);
+      var rest = lines.slice(maxLines - 1).join(' ');
+      last.push(rest.length > maxChars - 3 ? rest.slice(0, maxChars - 3) + '…' : rest);
+      lines = last;
+    }
+    return lines;
+  }
+
   function evaluateDeadline(deadlineIso, isDone, completedAtIso, todayIso) {
     if (typeof deadlineIso !== 'string' || !ISO_DATE_REGEX.test(deadlineIso)) {
       deadlineIso = null;
@@ -500,11 +523,11 @@
           }
         }
 
-        var displayTitle = stDef.title;
-        if (displayTitle.length > 24) {
-          displayTitle = displayTitle.slice(0, 22) + '…';
+        var titleLines = wrapStationTitle(stDef.title, 3, 14);
+        for (var tl = 0; tl < titleLines.length; tl++) {
+          var lineY = coord.titleY - (titleLines.length - 1 - tl) * 14;
+          svgHtml.push('  <text class="station-title-text" x="' + coord.x + '" y="' + lineY + '">' + escapeHtml(titleLines[tl]) + '</text>');
         }
-        svgHtml.push('  <text class="station-title-text" x="' + coord.x + '" y="' + coord.titleY + '">' + escapeHtml(displayTitle) + '</text>');
 
         var dlColor = '#9BB0D3';
         if (dlInfo.state === 'overdue') dlColor = isSteampunk ? '#EF4444' : '#FFA07A';
