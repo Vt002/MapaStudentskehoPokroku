@@ -596,7 +596,7 @@
         else if (dlInfo.state === 'near') dlColor = '#FFB000';
         else if (dlInfo.state === 'done') dlColor = isSteampunk ? '#22C55E' : '#39FF88';
         var dlText = (selectedTrack === 'ALL') ? '' : escapeHtml(dlInfo.shortText);
-        svgHtml.push('  <text class="station-deadline-text" x="' + coord.x + '" y="' + (coord.titleY + 16) + '" fill="' + dlColor + '">' + dlText + '</text>');
+        svgHtml.push(' <text class="station-deadline-text" x="' + coord.x + '" y="' + (capBottom + 18) + '" fill="' + dlColor + '">' + dlText + '</text>');
 
         svgHtml.push('  <g class="station-btn-details" role="button" tabindex="0" aria-label="Zobrazit podrobnosti k tématu ' + escapeHtml(stDef.title) + '">');
         svgHtml.push('    <text class="station-action-link link-details" x="' + coord.x + '" y="' + (capBottom + 33) + '">Podrobnosti</text>');
@@ -657,7 +657,7 @@
         var dlIso = null;
         if (scheduleData && scheduleData.deadlines && scheduleData.deadlines[stId]) {
           var dlObj = scheduleData.deadlines[stId];
-          dlIso = (selectedTrack !== 'ALL') ? dlObj[selectedTrack] : (dlObj.A || dlObj.E || dlObj.S);
+          dlIso = (selectedTrack !== 'ALL') ? dlObj[selectedTrack] : null;
         }
         var dlInfo = evaluateDeadline(dlIso, isDone, stRecord.completedAt, today);
         var isCurrent = (currentStationId === stId);
