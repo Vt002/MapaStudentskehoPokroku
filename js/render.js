@@ -281,15 +281,15 @@
   var MAP_COORDS = {
     viewBox: '0 0 1360 440',
     stations: {
-      'vyber': { x: 90, y: 260, h: 100, isBranch: false, titleY: 345 },
-      'dio-mcu': { x: 250, y: 110, h: 44, isBranch: true, titleY: 65 },
-      'iot': { x: 410, y: 110, h: 44, isBranch: true, titleY: 65 },
-      'vyvojove': { x: 570, y: 110, h: 44, isBranch: true, titleY: 65 },
-      'plc': { x: 730, y: 260, h: 100, isBranch: false, titleY: 345 },
-      'dio-plc': { x: 890, y: 260, h: 100, isBranch: false, titleY: 345 },
-      'senzory': { x: 1040, y: 260, h: 100, isBranch: false, titleY: 345 },
-      'regulace': { x: 1180, y: 260, h: 100, isBranch: false, titleY: 345 },
-      'bezpecnost': { x: 1290, y: 275, h: 70, isBranch: false, titleY: 345 }
+      'vyber': { x: 90, y: 260, h: 100, isBranch: false },
+      'dio-mcu': { x: 250, y: 110, h: 44, isBranch: true },
+      'iot': { x: 410, y: 110, h: 44, isBranch: true },
+      'vyvojove': { x: 570, y: 110, h: 44, isBranch: true },
+      'plc': { x: 730, y: 260, h: 100, isBranch: false },
+      'dio-plc': { x: 890, y: 260, h: 100, isBranch: false },
+      'senzory': { x: 1040, y: 260, h: 100, isBranch: false },
+      'regulace': { x: 1180, y: 260, h: 100, isBranch: false },
+      'bezpecnost': { x: 1290, y: 275, h: 70, isBranch: false }
     }
   };
 
@@ -365,6 +365,62 @@
         svgHtml.push('<g font-family="Georgia, serif" fill="#D4AF37" text-anchor="middle">');
         svgHtml.push('  <text x="680" y="27" font-size="11.5" font-weight="700" letter-spacing="1.5">⚙ PARNÍ A ELEKTROMECHANICKÝ ROZVOD // TECHNICKÉ DÍLNY A LABORATOŘE ⚙</text>');
         svgHtml.push('</g>');
+
+        // MOSAZNÉ MANOMETRY (vlevo a vpravo nahoře)
+        var gauges = [[85, 78, -38], [1275, 78, 25]];
+        for (var g = 0; g < gauges.length; g++) {
+          var gx = gauges[g][0];
+          var gy = gauges[g][1];
+          var needleRad = gauges[g][2] * Math.PI / 180;
+          svgHtml.push('  <g>');
+          svgHtml.push('    <circle cx="' + gx + '" cy="' + gy + '" r="20" fill="url(#brassBezelGrad)" stroke="#5C4524" stroke-width="2"/>');
+          svgHtml.push('    <circle cx="' + gx + '" cy="' + gy + '" r="14" fill="#E8DCC0" stroke="#5C4524" stroke-width="1"/>');
+          for (var tk = 0; tk < 8; tk++) {
+            var tAng = (tk / 8) * 2 * Math.PI;
+            svgHtml.push('    <line x1="' + (gx + Math.cos(tAng) * 11).toFixed(1) + '" y1="' + (gy + Math.sin(tAng) * 11).toFixed(1) + '" x2="' + (gx + Math.cos(tAng) * 13.5).toFixed(1) + '" y2="' + (gy + Math.sin(tAng) * 13.5).toFixed(1) + '" stroke="#5C4524" stroke-width="1"/>');
+          }
+          svgHtml.push('    <line x1="' + gx + '" y1="' + gy + '" x2="' + (gx + Math.cos(needleRad) * 10).toFixed(1) + '" y2="' + (gy + Math.sin(needleRad) * 10).toFixed(1) + '" stroke="#A32020" stroke-width="1.6" stroke-linecap="round"/>');
+          svgHtml.push('    <circle cx="' + gx + '" cy="' + gy + '" r="2" fill="#5C4524"/>');
+          svgHtml.push('  </g>');
+        }
+
+        // OZUBENÁ KOLA (páry v obou dolních rozích)
+        var gearPairs = [[62, 396, 13, 92, 406, 8], [1298, 396, 13, 1268, 406, 8]];
+        for (var gp = 0; gp < gearPairs.length; gp++) {
+          for (var gg = 0; gg < 2; gg++) {
+            var cx = gearPairs[gp][gg * 4];
+            var cy = gearPairs[gp][gg * 4 + 1];
+            var cr = gearPairs[gp][gg * 4 + 2];
+            svgHtml.push('  <g>');
+            svgHtml.push('    <circle cx="' + cx + '" cy="' + cy + '" r="' + (cr + 3) + '" fill="#5C4524"/>');
+            for (var th = 0; th < 8; th++) {
+              var gAng = (th / 8) * 2 * Math.PI;
+              svgHtml.push('    <line x1="' + (cx + Math.cos(gAng) * cr).toFixed(1) + '" y1="' + (cy + Math.sin(gAng) * cr).toFixed(1) + '" x2="' + (cx + Math.cos(gAng) * (cr + 3)).toFixed(1) + '" y2="' + (cy + Math.sin(gAng) * (cr + 3)).toFixed(1) + '" stroke="#8B6F47" stroke-width="2.5"/>');
+            }
+            svgHtml.push('    <circle cx="' + cx + '" cy="' + cy + '" r="' + cr + '" fill="url(#brassBezelGrad)" stroke="#5C4524" stroke-width="1"/>');
+            svgHtml.push('    <circle cx="' + cx + '" cy="' + cy + '" r="' + (cr / 3).toFixed(1) + '" fill="#140D09" stroke="#D4AF37" stroke-width="1"/>');
+            svgHtml.push('  </g>');
+          }
+        }
+
+        // TÁHLO S DRŽÁKY (pod spodní tratí)
+        svgHtml.push('  <line x1="120" y1="392" x2="1240" y2="392" stroke="#8B6F47" stroke-width="3" stroke-linecap="round"/>');
+        for (var rod = 120; rod <= 1240; rod += 160) {
+          svgHtml.push('  <circle cx="' + rod + '" cy="392" r="3" fill="#D4AF37" stroke="#5C4524" stroke-width="1"/>');
+        }
+
+        // PŘEPÍNAČE (mosazné desky s páčkou, nasazené na táhlo)
+        var switchDefs = [[460, 30], [900, -25]];
+        for (var sw = 0; sw < switchDefs.length; sw++) {
+          var sx = switchDefs[sw][0];
+          var sDeg = switchDefs[sw][1];
+          var sRad = sDeg * Math.PI / 180;
+          svgHtml.push('  <g>');
+          svgHtml.push('    <rect x="' + (sx - 14) + '" y="384" width="28" height="16" rx="3" fill="url(#brassBezelGrad)" stroke="#5C4524" stroke-width="1.5"/>');
+          svgHtml.push('    <line x1="' + sx + '" y1="392" x2="' + (sx + Math.cos(sRad) * 14).toFixed(1) + '" y2="' + (392 + Math.sin(sRad) * 14).toFixed(1) + '" stroke="#140D09" stroke-width="3" stroke-linecap="round"/>');
+          svgHtml.push('    <circle cx="' + sx + '" cy="392" r="2.5" fill="#D4AF37"/>');
+          svgHtml.push('  </g>');
+        }
       }
 
       // Tratě (Linky)
@@ -431,7 +487,7 @@
         var dlIso = null;
         if (scheduleData && scheduleData.deadlines && scheduleData.deadlines[stId]) {
           var dlObj = scheduleData.deadlines[stId];
-          dlIso = (selectedTrack !== 'ALL') ? dlObj[selectedTrack] : (dlObj.A || dlObj.E || dlObj.S);
+          dlIso = (selectedTrack !== 'ALL') ? dlObj[selectedTrack] : null;
         }
         var dlInfo = evaluateDeadline(dlIso, isDone, stRecord.completedAt, today);
 
@@ -447,6 +503,17 @@
         var capW = 38;
         var capX = coord.x - capW / 2;
         var capY = coord.y - coord.h / 2;
+        var capBottom = capY + coord.h;
+
+        // Vykreslení názvu tématu NAD obdélníčkem
+        var titleLines = wrapStationTitle(stDef.title, 3, 16);
+        var titleBottomY = coord.isBranch ? 78 : (coord.y > 200 ? 198 : capY - 10);
+        var topTitleY = titleBottomY - (titleLines.length - 1) * 15;
+
+        for (var tl = 0; tl < titleLines.length; tl++) {
+          var lineY = titleBottomY - (titleLines.length - 1 - tl) * 15;
+          svgHtml.push('  <text class="station-title-text" x="' + coord.x + '" y="' + lineY + '">' + escapeHtml(titleLines[tl]) + '</text>');
+        }
 
         if (isSteampunk) {
           // Steampunk: Viktoriánský manometr / tlakoměr s mosazným rámečkem
@@ -468,7 +535,7 @@
           // Sci-fi: Waypoint modul s přesnými rohovými závorkami a telemetrickým kódem
           var wpIdx = waypointIds.indexOf(stId) + 1;
           var wpTag = 'WP-' + (wpIdx < 10 ? '0' + wpIdx : wpIdx);
-          var tagY = coord.y < 200 ? capY - 8 : capY + coord.h + 14;
+          var tagY = isCurrent ? (topTitleY - 32) : (topTitleY - 8);
           svgHtml.push('  <text class="scifi-waypoint-tag" x="' + coord.x + '" y="' + tagY + '" text-anchor="middle" fill="var(--track-a)">[' + wpTag + ']</text>');
           // Rohové zaměřovací závorky kolem waypointu
           var bOff = 4;
@@ -496,7 +563,7 @@
 
         // Ukazatel "JSEM TADY"
         if (isCurrent) {
-          var pinY = capY - 26;
+          var pinY = topTitleY - 8;
           if (isScifi) {
             // Sci-fi: Zaměřovací radarový cíl
             svgHtml.push('  <g class="pin-here" transform="translate(' + coord.x + ',' + pinY + ')">');
@@ -523,21 +590,21 @@
           }
         }
 
-        var titleLines = wrapStationTitle(stDef.title, 3, 14);
-        for (var tl = 0; tl < titleLines.length; tl++) {
-          var lineY = coord.titleY - (titleLines.length - 1 - tl) * 14;
-          svgHtml.push('  <text class="station-title-text" x="' + coord.x + '" y="' + lineY + '">' + escapeHtml(titleLines[tl]) + '</text>');
-        }
-
+        // Prvky POD obdélníčkem: Termín, Odkaz na podrobnosti, Odkaz na GitHub
         var dlColor = '#9BB0D3';
         if (dlInfo.state === 'overdue') dlColor = isSteampunk ? '#EF4444' : '#FFA07A';
         else if (dlInfo.state === 'near') dlColor = '#FFB000';
         else if (dlInfo.state === 'done') dlColor = isSteampunk ? '#22C55E' : '#39FF88';
-        svgHtml.push('  <text class="station-deadline-text" x="' + coord.x + '" y="' + (coord.titleY + 16) + '" fill="' + dlColor + '">' + escapeHtml(dlInfo.shortText) + '</text>');
+        var dlText = (selectedTrack === 'ALL') ? '' : escapeHtml(dlInfo.shortText);
+        svgHtml.push('  <text class="station-deadline-text" x="' + coord.x + '" y="' + (coord.titleY + 16) + '" fill="' + dlColor + '">' + dlText + '</text>');
+
+        svgHtml.push('  <g class="station-btn-details" role="button" tabindex="0" aria-label="Zobrazit podrobnosti k tématu ' + escapeHtml(stDef.title) + '">');
+        svgHtml.push('    <text class="station-action-link link-details" x="' + coord.x + '" y="' + (capBottom + 33) + '">Podrobnosti</text>');
+        svgHtml.push('  </g>');
 
         var repoUrl = mapData.repoBaseUrl + stDef.repo;
-        svgHtml.push('  <a href="' + escapeHtml(repoUrl) + '" target="_blank" rel="noopener noreferrer" aria-label="Otevřít repozitář ' + escapeHtml(stDef.title) + ' v nové záložce">');
-        svgHtml.push('    <text x="' + (coord.x + 22) + '" y="' + (coord.titleY - 8) + '" fill="var(--track-a)" font-family="JetBrains Mono" font-size="12" font-weight="700">↗</text>');
+        svgHtml.push('  <a href="' + escapeHtml(repoUrl) + '" target="_blank" rel="noopener noreferrer" class="station-btn-github" aria-label="Otevřít repozitář ' + escapeHtml(stDef.title) + ' na GitHubu">');
+        svgHtml.push('    <text class="station-action-link link-github" x="' + coord.x + '" y="' + (capBottom + 48) + '">GitHub ↗</text>');
         svgHtml.push('  </a>');
 
         svgHtml.push('</g>');
@@ -615,7 +682,8 @@
         html.push('    </div>');
 
         html.push('    <div class="list-station-right">');
-        html.push('      <span class="deadline-pill state-' + escapeHtml(dlInfo.state) + '">' + escapeHtml(dlInfo.icon) + ' ' + escapeHtml(dlInfo.shortText) + '</span>');
+        var pillContent = (selectedTrack === 'ALL') ? '' : escapeHtml(dlInfo.icon) + ' ' + escapeHtml(dlInfo.shortText);
+        html.push('      <span class="deadline-pill state-' + escapeHtml(dlInfo.state) + '">' + pillContent + '</span>');
         html.push('      <a class="repo-link-icon" href="' + escapeHtml(repoUrl) + '" target="_blank" rel="noopener noreferrer" aria-label="Otevřít repozitář ' + escapeHtml(stDef.title) + ' v nové záložce">↗</a>');
         html.push('    </div>');
 

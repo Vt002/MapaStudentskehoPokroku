@@ -14,7 +14,7 @@
     tracks: {
       A: {
         id: 'A',
-        name: 'Obor A (Aplikovaná informatika / Automatizace)',
+        name: 'Obor A (Počítačové sítě a programování)',
         shortName: 'A',
         color: '#0284C7', // Modrá (odstín dle skinu)
         lineStyle: 'solid',
@@ -31,7 +31,7 @@
       },
       E: {
         id: 'E',
-        name: 'Obor E (Elektrotechnika)',
+        name: 'Obor E (Řídicí systémy a energetika)',
         shortName: 'E',
         color: '#EA580C', // Oranžová (odstín dle skinu)
         lineStyle: 'dotted',
@@ -46,7 +46,7 @@
       },
       S: {
         id: 'S',
-        name: 'Obor S (Strojírenství / Mechatronika)',
+        name: 'Obor S (Automatizace a robotika)',
         shortName: 'S',
         color: '#CA8A04', // Žlutá (odstín dle skinu)
         lineStyle: 'dashed',

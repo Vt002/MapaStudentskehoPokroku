@@ -14,9 +14,9 @@ V pravém horním rohu ovládací lišty si můžete zvolit jeden z 5 vizuální
 5. **Steampunk:** Styl viktoriánské technické dílny – masivní parní potrubí, měděné rozvody, mosazné manometry s ukazateli tlaku a hodinová soukolí.
 
 ### 🔵 Barevné kódování oborů (napříč všemi skiny):
-- **Obor A (Aplikovaná informatika / Automatizace):** Všude **modrá** (odstín přizpůsoben skinu).
-- **Obor E (Elektrotechnika):** Všude **oranžová** (odstín přizpůsoben skinu).
-- **Obor S (Strojírenství / Mechatronika):** Všude **žlutá / zlatavá** (odstín přizpůsoben skinu).
+- **Obor A (Počítačové sítě a programování):** Všude **modrá** (odstín přizpůsoben skinu).
+- **Obor E (Řídicí systémy a energetika):** Všude **oranžová** (odstín přizpůsoben skinu).
+- **Obor S (Automatizace a robotika):** Všude **žlutá / zlatavá** (odstín přizpůsoben skinu).
 
 ---
 

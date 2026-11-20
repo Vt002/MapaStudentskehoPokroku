@@ -150,11 +150,11 @@ body[data-theme="cyberpunk"] {
   --font-main: 'Rajdhani', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', Consolas, "Courier New", monospace;
 
-  --bg-deep: #05060F;
-  --bg-dark: #0B0D1F;
-  --bg-panel: #0F1230;
-  --bg-panel-alt: #161A42;
-  --bg-overlay: rgba(5, 6, 15, 0.85);
+  --bg-deep: #0B0C0E;
+  --bg-dark: #121417;
+  --bg-panel: #1A1D21;
+  --bg-panel-alt: #22262B;
+  --bg-overlay: rgba(10, 11, 13, 0.88);
 
   --text-main: #E6F1FF;
   --text-muted: #9BB0D3;
@@ -182,6 +182,43 @@ body[data-theme="cyberpunk"] {
   --card-radius: 0px;
   --panel-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
   --has-scanlines: 1;
+}
+
+/* 3a. CYBERPUNK – náznak graffiti na šedém betonovém pozadí */
+body[data-theme="cyberpunk"] .app-container {
+  position: relative;
+}
+
+body[data-theme="cyberpunk"] .app-container::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(120px 90px at 8% 12%, rgba(210, 215, 220, 0.05), transparent 70%),
+    radial-gradient(180px 130px at 88% 8%, rgba(0, 0, 0, 0.35), transparent 70%),
+    radial-gradient(90px 70px at 30% 85%, rgba(210, 215, 220, 0.04), transparent 70%),
+    radial-gradient(220px 160px at 70% 92%, rgba(0, 0, 0, 0.30), transparent 70%),
+    radial-gradient(60px 60px at 55% 45%, rgba(210, 215, 220, 0.03), transparent 70%),
+    radial-gradient(40px 40px at 15% 55%, rgba(0, 0, 0, 0.25), transparent 70%);
+}
+
+body[data-theme="cyberpunk"] .app-container::after {
+  content: 'AUT ◇ E ◇ S ◇ SPŠEL';
+  position: fixed;
+  top: 12rem;
+  left: -1.5rem;
+  pointer-events: none;
+  z-index: 0;
+  font-family: var(--font-main);
+  font-weight: 700;
+  font-size: 5.5rem;
+  letter-spacing: 0.35em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(220, 224, 230, 0.045);
+  transform: rotate(-8deg);
+  white-space: nowrap;
 }
 
 /* 4. SCI-FI (PRŮZKUM VESMÍRU / VĚDECKO-TECHNICKÁ TELEMETRIE) */
@@ -467,6 +504,18 @@ body[data-theme="minimal-light"] .controls-bar {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+}
+
+.cyber-btn-track[data-track="A"] {
+  color: var(--track-a);
+}
+
+.cyber-btn-track[data-track="E"] {
+  color: var(--track-e);
+}
+
+.cyber-btn-track[data-track="S"] {
+  color: var(--track-s);
 }
 
 .cyber-btn-track[data-track="ALL"].active {
@@ -826,6 +875,87 @@ body[data-theme="minimal-dark"] .track-pulse,
   font-size: 11px;
   text-anchor: middle;
   pointer-events: none;
+}
+
+.station-action-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-anchor: middle;
+  cursor: pointer;
+  transition: fill 0.15s, opacity 0.15s;
+}
+
+.station-action-link.link-details {
+  fill: var(--track-a);
+  font-weight: 600;
+}
+
+.station-btn-details:hover .station-action-link.link-details,
+.station-node:hover .station-action-link.link-details {
+  fill: var(--text-main);
+  text-decoration: underline;
+}
+
+.station-action-link.link-github {
+  fill: var(--text-dim);
+  font-weight: 500;
+}
+
+.station-btn-github:hover .station-action-link.link-github {
+  fill: var(--track-a);
+  text-decoration: underline;
+}
+
+body[data-theme="minimal-light"] .station-action-link.link-details {
+  fill: #0284C7;
+}
+
+body[data-theme="minimal-light"] .station-btn-details:hover .station-action-link.link-details,
+body[data-theme="minimal-light"] .station-node:hover .station-action-link.link-details {
+  fill: #0369A1;
+}
+
+body[data-theme="minimal-light"] .station-action-link.link-github {
+  fill: #64748B;
+}
+
+body[data-theme="minimal-light"] .station-btn-github:hover .station-action-link.link-github {
+  fill: #0F172A;
+}
+
+body[data-theme="scifi"] .station-action-link.link-details {
+  font-family: var(--font-mono);
+  fill: var(--track-a);
+}
+
+body[data-theme="scifi"] .station-btn-details:hover .station-action-link.link-details {
+  fill: #E2E8F0;
+  filter: drop-shadow(0 0 5px rgba(14, 165, 233, 0.8));
+}
+
+body[data-theme="scifi"] .station-btn-github:hover .station-action-link.link-github {
+  fill: var(--track-a);
+  filter: drop-shadow(0 0 5px rgba(14, 165, 233, 0.8));
+}
+
+body[data-theme="steampunk"] .station-action-link {
+  font-family: 'Georgia', serif;
+}
+
+body[data-theme="steampunk"] .station-action-link.link-details {
+  fill: #D4AF37;
+}
+
+body[data-theme="steampunk"] .station-btn-details:hover .station-action-link.link-details {
+  fill: #FFF;
+}
+
+body[data-theme="steampunk"] .station-action-link.link-github {
+  fill: #8B6F47;
+}
+
+body[data-theme="steampunk"] .station-btn-github:hover .station-action-link.link-github {
+  fill: #D4AF37;
 }
 
 /* --- SPECIFICKÉ STYLY PRO SCI-FI MAPU --- */
