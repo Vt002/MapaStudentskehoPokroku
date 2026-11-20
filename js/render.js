@@ -7,6 +7,18 @@
 
   var repoContentCache = {};
 
+  var ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+  var REPO_NAME_REGEX = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
+
+  function escapeHtml(value) {
+    return String(value === null || value === undefined ? '' : value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   function formatDateCZ(isoStr, includeYear) {
     if (!isoStr) return '';
     var parts = isoStr.split('-');
@@ -28,6 +40,13 @@
   }
 
   function evaluateDeadline(deadlineIso, isDone, completedAtIso, todayIso) {
+    if (typeof deadlineIso !== 'string' || !ISO_DATE_REGEX.test(deadlineIso)) {
+      deadlineIso = null;
+    }
+    if (typeof completedAtIso !== 'string' || !ISO_DATE_REGEX.test(completedAtIso)) {
+      completedAtIso = null;
+    }
+
     if (isDone) {
       return {
         state: 'done',
@@ -74,7 +93,7 @@
    */
   function parseMarkdownToHtml(mdText) {
     if (!mdText) return '<p style="color: var(--text-muted);">Žádný obsah k zobrazení.</p>';
-    
+
     // 1. Odstranění HTML komentářů a math syntaxe
     var clean = mdText.replace(/<!--[\s\S]*?-->/g, '');
     clean = clean.replace(/\$\$\{[\s\S]*?\}\$\$/g, '');
@@ -185,6 +204,11 @@
    * Stažení a parsování README z GitHubu
    */
   function fetchAndRenderSection(repoName, sectionType, targetElement, repoUrl) {
+    if (typeof repoName !== 'string' || !REPO_NAME_REGEX.test(repoName) || repoName.indexOf('..') !== -1) {
+      targetElement.innerHTML = '<p style="color: var(--status-help); font-size: 0.9rem;">⚠️ Odkaz na zdrojový repozitář není platný.</p>';
+      return;
+    }
+
     var cacheKey = repoName + ':' + sectionType;
     if (repoContentCache[cacheKey]) {
       targetElement.innerHTML = repoContentCache[cacheKey];
@@ -208,9 +232,9 @@
           var keywords = sectionType === 'goals' ? ['cíle', 'cíl'] : ['ověření cílů', 'ověření'];
           var sectionMd = extractReadmeSection(mdText, keywords);
           var html = parseMarkdownToHtml(sectionMd);
-          
+
           // Doplníme malý odkaz na GitHub na konec
-          html += '<div style="margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px dashed var(--border-neon);"><a href="' + repoUrl + '" target="_blank" rel="noopener noreferrer" style="font-family: var(--font-mono); font-size: 0.8rem;">Otevřít zdrojový repozitář na GitHubu ↗</a></div>';
+          html += '<div style="margin-top: 0.75rem; padding-top: 0.5rem; border-top: 1px dashed var(--border-neon);"><a href="' + escapeHtml(repoUrl) + '" target="_blank" rel="noopener noreferrer" style="font-family: var(--font-mono); font-size: 0.8rem;">Otevřít zdrojový repozitář na GitHubu ↗</a></div>';
 
           repoContentCache[cacheKey] = html;
           targetElement.innerHTML = html;
@@ -219,7 +243,7 @@
           if (onFail) {
             onFail();
           } else {
-            targetElement.innerHTML = '<p style="color: var(--status-help); font-size: 0.9rem;">⚠️ Živý text z repozitáře se nepodařilo stáhnout (offline nebo nedostupná síť).<br><a href="' + repoUrl + '" target="_blank" rel="noopener noreferrer" style="display: inline-block; margin-top: 0.4rem;">Zobrazit přímo na GitHubu ↗</a></p>';
+            targetElement.innerHTML = '<p style="color: var(--status-help); font-size: 0.9rem;">⚠️ Živý text z repozitáře se nepodařilo stáhnout (offline nebo nedostupná síť).<br><a href="' + escapeHtml(repoUrl) + '" target="_blank" rel="noopener noreferrer" style="display: inline-block; margin-top: 0.4rem;">Zobrazit přímo na GitHubu ↗</a></p>';
           }
         });
     }
@@ -234,15 +258,15 @@
   var MAP_COORDS = {
     viewBox: '0 0 1360 440',
     stations: {
-      'vyber':     { x: 90,   y: 260, h: 100, isBranch: false, titleY: 345 },
-      'dio-mcu':   { x: 250,  y: 110, h: 44,  isBranch: true,  titleY: 65 },
-      'iot':       { x: 410,  y: 110, h: 44,  isBranch: true,  titleY: 65 },
-      'vyvojove':  { x: 570,  y: 110, h: 44,  isBranch: true,  titleY: 65 },
-      'plc':       { x: 730,  y: 260, h: 100, isBranch: false, titleY: 345 },
-      'dio-plc':   { x: 890,  y: 260, h: 100, isBranch: false, titleY: 345 },
-      'senzory':   { x: 1040, y: 260, h: 100, isBranch: false, titleY: 345 },
-      'regulace':  { x: 1180, y: 260, h: 100, isBranch: false, titleY: 345 },
-      'bezpecnost':{ x: 1290, y: 275, h: 70,  isBranch: false, titleY: 345 }
+      'vyber': { x: 90, y: 260, h: 100, isBranch: false, titleY: 345 },
+      'dio-mcu': { x: 250, y: 110, h: 44, isBranch: true, titleY: 65 },
+      'iot': { x: 410, y: 110, h: 44, isBranch: true, titleY: 65 },
+      'vyvojove': { x: 570, y: 110, h: 44, isBranch: true, titleY: 65 },
+      'plc': { x: 730, y: 260, h: 100, isBranch: false, titleY: 345 },
+      'dio-plc': { x: 890, y: 260, h: 100, isBranch: false, titleY: 345 },
+      'senzory': { x: 1040, y: 260, h: 100, isBranch: false, titleY: 345 },
+      'regulace': { x: 1180, y: 260, h: 100, isBranch: false, titleY: 345 },
+      'bezpecnost': { x: 1290, y: 275, h: 70, isBranch: false, titleY: 345 }
     }
   };
 
@@ -254,10 +278,6 @@
      * Vykreslení SVG metro mapy
      */
     renderSVGMap: function (container, mapData, scheduleData, studentState, onStationSelect) {
-      var selectedTrack = studentState.selectedTrack || 'ALL';
-      var today = root.MSPStorage.getISODateToday();
-      var currentStationId = this.detectCurrentStationId(mapData, studentState);
-
       var selectedTrack = studentState.selectedTrack || 'ALL';
       var today = root.MSPStorage.getISODateToday();
       var currentStationId = this.detectCurrentStationId(mapData, studentState);
@@ -274,10 +294,10 @@
 
       var svgHtml = [];
       svgHtml.push('<svg class="metro-svg ' + filterClass + '" viewBox="' + MAP_COORDS.viewBox + '" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interaktivní mapa studentského pokroku">');
-      
+
       svgHtml.push('<defs>');
       svgHtml.push('  <filter id="glowCyan" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>');
-      
+
       if (isScifi) {
         svgHtml.push('  <pattern id="scifiGrid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(14, 165, 233, 0.08)" stroke-width="1"/><circle cx="0" cy="0" r="1.2" fill="rgba(14, 165, 233, 0.25)"/></pattern>');
         svgHtml.push('  <filter id="scifiGlow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>');
@@ -313,7 +333,7 @@
         svgHtml.push('<rect x="14" y="14" width="1332" height="412" fill="none" stroke="#8B6F47" stroke-width="2" rx="6"/>');
         svgHtml.push('<rect x="18" y="18" width="1324" height="404" fill="none" stroke="rgba(212, 175, 55, 0.35)" stroke-width="1" stroke-dasharray="6 6"/>');
         // Mosazné nýty v rozích
-        var rivets = [[28,28], [1332,28], [28,412], [1332,412]];
+        var rivets = [[28, 28], [1332, 28], [28, 412], [1332, 412]];
         for (var r = 0; r < rivets.length; r++) {
           svgHtml.push('<circle cx="' + rivets[r][0] + '" cy="' + rivets[r][1] + '" r="5" fill="#D4AF37" stroke="#5C4524" stroke-width="1.5"/>');
           svgHtml.push('<circle cx="' + rivets[r][0] + '" cy="' + rivets[r][1] + '" r="1.5" fill="#140D09"/>');
@@ -399,8 +419,8 @@
 
         var isCurrent = (currentStationId === stId);
 
-        svgHtml.push('<g class="station-node" data-id="' + stId + '" tabindex="0" role="button" aria-label="Téma: ' + stDef.title + ', stav: ' + stRecord.status + ', termín: ' + dlInfo.shortText + '">');
-        
+        svgHtml.push('<g class="station-node" data-id="' + escapeHtml(stId) + '" tabindex="0" role="button" aria-label="Téma: ' + escapeHtml(stDef.title) + ', stav: ' + escapeHtml(stRecord.status) + ', termín: ' + escapeHtml(dlInfo.shortText) + '">');
+
         var capW = 38;
         var capX = coord.x - capW / 2;
         var capY = coord.y - coord.h / 2;
@@ -433,9 +453,9 @@
           svgHtml.push('  <path d="M ' + (capX + capW - 6) + ',' + (capY - bOff) + ' L ' + (capX + capW + bOff) + ',' + (capY - bOff) + ' L ' + (capX + capW + bOff) + ',' + (capY + 6) + '" fill="none" stroke="rgba(14, 165, 233, 0.6)" stroke-width="1.5" />');
           svgHtml.push('  <path d="M ' + (capX - bOff) + ',' + (capY + coord.h - 6) + ' L ' + (capX - bOff) + ',' + (capY + coord.h + bOff) + ' L ' + (capX + 6) + ',' + (capY + coord.h + bOff) + '" fill="none" stroke="rgba(14, 165, 233, 0.6)" stroke-width="1.5" />');
           svgHtml.push('  <path d="M ' + (capX + capW - 6) + ',' + (capY + coord.h + bOff) + ' L ' + (capX + capW + bOff) + ',' + (capY + coord.h + bOff) + ' L ' + (capX + capW + bOff) + ',' + (capY + coord.h - 6) + '" fill="none" stroke="rgba(14, 165, 233, 0.6)" stroke-width="1.5" />');
-          
+
           svgHtml.push('  <rect class="station-shape ' + statusClass + '" x="' + capX + '" y="' + capY + '" width="' + capW + '" height="' + coord.h + '" rx="10" />');
-          
+
           var iconChar = '•';
           if (isDone) iconChar = '✓';
           else if (isWorking) iconChar = '⚡';
@@ -484,16 +504,16 @@
         if (displayTitle.length > 24) {
           displayTitle = displayTitle.slice(0, 22) + '…';
         }
-        svgHtml.push('  <text class="station-title-text" x="' + coord.x + '" y="' + coord.titleY + '">' + displayTitle + '</text>');
+        svgHtml.push('  <text class="station-title-text" x="' + coord.x + '" y="' + coord.titleY + '">' + escapeHtml(displayTitle) + '</text>');
 
         var dlColor = '#9BB0D3';
         if (dlInfo.state === 'overdue') dlColor = isSteampunk ? '#EF4444' : '#FFA07A';
         else if (dlInfo.state === 'near') dlColor = '#FFB000';
         else if (dlInfo.state === 'done') dlColor = isSteampunk ? '#22C55E' : '#39FF88';
-        svgHtml.push('  <text class="station-deadline-text" x="' + coord.x + '" y="' + (coord.titleY + 16) + '" fill="' + dlColor + '">' + dlInfo.shortText + '</text>');
+        svgHtml.push('  <text class="station-deadline-text" x="' + coord.x + '" y="' + (coord.titleY + 16) + '" fill="' + dlColor + '">' + escapeHtml(dlInfo.shortText) + '</text>');
 
         var repoUrl = mapData.repoBaseUrl + stDef.repo;
-        svgHtml.push('  <a href="' + repoUrl + '" target="_blank" rel="noopener noreferrer" aria-label="Otevřít repozitář ' + stDef.title + ' v nové záložce">');
+        svgHtml.push('  <a href="' + escapeHtml(repoUrl) + '" target="_blank" rel="noopener noreferrer" aria-label="Otevřít repozitář ' + escapeHtml(stDef.title) + ' v nové záložce">');
         svgHtml.push('    <text x="' + (coord.x + 22) + '" y="' + (coord.titleY - 8) + '" fill="var(--track-a)" font-family="JetBrains Mono" font-size="12" font-weight="700">↗</text>');
         svgHtml.push('  </a>');
 
@@ -551,28 +571,29 @@
         }
         var dlInfo = evaluateDeadline(dlIso, isDone, stRecord.completedAt, today);
         var isCurrent = (currentStationId === stId);
+        var repoUrl = mapData.repoBaseUrl + stDef.repo;
 
         html.push('<li class="list-station-card">');
         html.push('  <div class="list-station-header" data-id="' + stId + '" role="button" tabindex="0" aria-expanded="false">');
         html.push('    <div class="list-station-left">');
         html.push('      <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-dim);">' + (idx + 1) + '.</span>');
-        
+
         html.push('      <div class="station-badge-group">');
         for (var trk in stDef.trackNumbers) {
           var num = stDef.trackNumbers[trk] || trk;
-          html.push('        <span class="track-badge badge-' + trk.toLowerCase() + '" title="Číslo v trase: ' + num + '">' + num + '</span>');
+          html.push('        <span class="track-badge badge-' + escapeHtml(trk.toLowerCase()) + '" title="Číslo v trase: ' + escapeHtml(num) + '">' + escapeHtml(num) + '</span>');
         }
         html.push('      </div>');
 
-        html.push('      <span class="list-station-title">' + stDef.title + '</span>');
+        html.push('      <span class="list-station-title">' + escapeHtml(stDef.title) + '</span>');
         if (isCurrent) {
           html.push('      <span style="font-family: var(--font-mono); font-size: 0.75rem; background: var(--track-a); color: #05060F; font-weight: 700; padding: 0.1rem 0.4rem; border-radius: 2px;">JSEM TADY</span>');
         }
         html.push('    </div>');
 
         html.push('    <div class="list-station-right">');
-        html.push('      <span class="deadline-pill state-' + dlInfo.state + '">' + dlInfo.icon + ' ' + dlInfo.shortText + '</span>');
-        html.push('      <a class="repo-link-icon" href="' + mapData.repoBaseUrl + stDef.repo + '" target="_blank" rel="noopener noreferrer" aria-label="Otevřít repozitář ' + stDef.title + ' v nové záložce">↗</a>');
+        html.push('      <span class="deadline-pill state-' + escapeHtml(dlInfo.state) + '">' + escapeHtml(dlInfo.icon) + ' ' + escapeHtml(dlInfo.shortText) + '</span>');
+        html.push('      <a class="repo-link-icon" href="' + escapeHtml(repoUrl) + '" target="_blank" rel="noopener noreferrer" aria-label="Otevřít repozitář ' + escapeHtml(stDef.title) + ' v nové záložce">↗</a>');
         html.push('    </div>');
 
         html.push('  </div>');
@@ -617,13 +638,13 @@
       var repoUrl = mapData.repoBaseUrl + stDef.repo;
 
       var html = [];
-      
+
       // Hlavička draweru
       html.push('<div class="details-header">');
       html.push('  <div class="details-header-top">');
       html.push('    <div class="details-title-wrap">');
       html.push('      <div style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--track-a); letter-spacing: 1.5px;">// DETAIL TÉMATU</div>');
-      html.push('      <h2 class="details-title">' + stDef.title + '</h2>');
+      html.push('      <h2 class="details-title">' + escapeHtml(stDef.title) + '</h2>');
       html.push('    </div>');
       html.push('    <button class="btn-close-drawer" id="btn-close-drawer" aria-label="Zavřít panel (Esc)">✕</button>');
       html.push('  </div>');
@@ -633,11 +654,11 @@
       if (stDef.trackNumbers) {
         for (var t in stDef.trackNumbers) {
           var tn = stDef.trackNumbers[t] || t;
-          html.push('    <span class="track-badge badge-' + t.toLowerCase() + '">Obor ' + t + ': ' + tn + '</span>');
+          html.push('    <span class="track-badge badge-' + escapeHtml(t.toLowerCase()) + '">Obor ' + escapeHtml(t) + ': ' + escapeHtml(tn) + '</span>');
         }
       }
-      html.push('    <span class="deadline-pill state-' + dlInfo.state + '">' + dlInfo.icon + ' ' + dlInfo.text + '</span>');
-      html.push('    <a class="cyber-btn" href="' + repoUrl + '" target="_blank" rel="noopener noreferrer" style="font-size: 0.85rem;">Otevřít na GitHubu ↗</a>');
+      html.push('    <span class="deadline-pill state-' + escapeHtml(dlInfo.state) + '">' + escapeHtml(dlInfo.icon) + ' ' + escapeHtml(dlInfo.text) + '</span>');
+      html.push('    <a class="cyber-btn" href="' + escapeHtml(repoUrl) + '" target="_blank" rel="noopener noreferrer" style="font-size: 0.85rem;">Otevřít na GitHubu ↗</a>');
       html.push('  </div>');
       html.push('</div>');
 
@@ -648,9 +669,9 @@
       html.push('  <section class="formative-card q1">');
       html.push('    <h3 class="card-question-title"><span>1.</span> Kam směřuji? (Cíle a kritéria)</h3>');
       html.push('    <p style="font-size: 0.95rem; color: var(--text-muted);">Kliknutím rozbalíte aktuální znění cílů přímo ze zdrojového repozitáře:</p>');
-      
+
       html.push('    <div class="repo-accordion-group">');
-      
+
       // Akordeon: Cíl tématu
       html.push('      <div>');
       html.push('        <button class="cyber-accordion-btn" id="btn-toggle-goals" type="button" aria-expanded="false">');
@@ -675,16 +696,16 @@
       // 2. KDE JSEM TEĎ? (Stav, sebehodnocení a nové rozvržení úloh)
       html.push('  <section class="formative-card q2">');
       html.push('    <h3 class="card-question-title"><span>2.</span> Kde jsem teď? (Stav a sebehodnocení)</h3>');
-      
+
       // Stav
       html.push('    <div style="display: flex; flex-direction: column; gap: 0.4rem;">');
       html.push('      <span class="control-label">Můj aktuální stav v tématu:</span>');
       html.push('      <div class="status-pill-grid">');
       var statuses = [
         { id: 'not_started', label: 'Ještě jsem nezačal/a' },
-        { id: 'working',     label: 'Pracuji na tom' },
-        { id: 'done',        label: 'Zvládám' },
-        { id: 'help',        label: 'Potřebuji pomoc' }
+        { id: 'working', label: 'Pracuji na tom' },
+        { id: 'done', label: 'Zvládám' },
+        { id: 'help', label: 'Potřebuji pomoc' }
       ];
       statuses.forEach(function (s) {
         var isSel = (stRecord.status === s.id);
@@ -701,9 +722,9 @@
       html.push('      <span class="control-label">Sebehodnocení zvládnutí učiva:</span>');
       html.push('      <div class="status-pill-grid">');
       var assessments = [
-        { id: 'certain',   label: 'Zvládl/a jsem jistě' },
+        { id: 'certain', label: 'Zvládl/a jsem jistě' },
         { id: 'with_help', label: 'S dopomocí' },
-        { id: 'unclear',   label: 'Zůstávají nejasnosti' }
+        { id: 'unclear', label: 'Zůstávají nejasnosti' }
       ];
       assessments.forEach(function (a) {
         var isSel = (stRecord.selfAssessment === a.id);
@@ -730,7 +751,7 @@
       // 3. JAK DÁL?
       html.push('  <section class="formative-card q3">');
       html.push('    <h3 class="card-question-title"><span>3.</span> Jak dál? (Akční plán a reflexe)</h3>');
-      
+
       html.push('    <div style="display: flex; flex-direction: column; gap: 0.4rem;">');
       html.push('      <label class="control-label" for="txt-next-step">Můj nejbližší další krok k překonání překážek:</label>');
       html.push('      <textarea class="cyber-textarea" id="txt-next-step" placeholder="Např. zopakovat zapojení pull-up rezistoru, projít dokumentaci k čidlu..."></textarea>');

@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Editor termínů výuky // Administrace vyučujícího</title>
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
   <link rel="stylesheet" href="../css/style.css">
   <style>
     .editor-container {
@@ -348,7 +349,7 @@
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } catch (err) {
           statusBox.className = 'save-alert-box warn';
-          statusBox.innerHTML = '⚠️ Chyba při ukládání do prohlížeče: ' + err.message;
+          statusBox.textContent = '⚠️ Chyba při ukládání do prohlížeče: ' + err.message;
         }
       }
 

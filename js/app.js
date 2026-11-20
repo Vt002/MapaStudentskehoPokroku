@@ -12,6 +12,26 @@
 
   var currentActiveStationId = null;
 
+  var ISO_DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+
+  function isValidSchedule(json) {
+    if (!json || typeof json !== 'object') return false;
+    if (typeof json.schoolYear !== 'string' || json.schoolYear.length > 32) return false;
+    if (!json.deadlines || typeof json.deadlines !== 'object') return false;
+    for (var stId in json.deadlines) {
+      if (!Object.prototype.hasOwnProperty.call(json.deadlines, stId)) continue;
+      if (typeof stId !== 'string' || stId.length > 64) return false;
+      var dl = json.deadlines[stId];
+      if (!dl || typeof dl !== 'object') return false;
+      for (var trk in dl) {
+        if (!Object.prototype.hasOwnProperty.call(dl, trk)) continue;
+        var val = dl[trk];
+        if (val !== null && (typeof val !== 'string' || !ISO_DATE_REGEX.test(val))) return false;
+      }
+    }
+    return true;
+  }
+
   function init() {
     console.log('[MSPApp] Inicializuji Mapu studentského pokroku...');
 
@@ -60,7 +80,7 @@
       var raw = localStorage.getItem('msp:teacher_schedule');
       if (raw) {
         var parsed = JSON.parse(raw);
-        if (parsed && parsed.deadlines) {
+        if (parsed && isValidSchedule(parsed)) {
           teacherSchedule = parsed;
         }
       }
@@ -77,7 +97,7 @@
         var cachedRaw = localStorage.getItem('msp:cached_schedule');
         if (cachedRaw) {
           var cachedParsed = JSON.parse(cachedRaw);
-          if (cachedParsed && cachedParsed.deadlines) {
+          if (cachedParsed && isValidSchedule(cachedParsed)) {
             return callback(cachedParsed);
           }
         }
@@ -98,7 +118,7 @@
         return res.json();
       })
       .then(function (json) {
-        if (json && json.schemaVersion && json.deadlines) {
+        if (json && json.schemaVersion && isValidSchedule(json)) {
           try {
             localStorage.setItem('msp:cached_schedule', JSON.stringify(json));
           } catch (e) { /* ignore */ }
@@ -114,7 +134,9 @@
           var cached = localStorage.getItem('msp:cached_schedule');
           if (cached) {
             var parsed = JSON.parse(cached);
-            return callback(parsed);
+            if (parsed && isValidSchedule(parsed)) {
+              return callback(parsed);
+            }
           }
         } catch (e) { /* ignore */ }
         callback(scheduleData);

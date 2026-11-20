@@ -93,7 +93,7 @@ def validate():
                     except ValueError:
                         errors.append(f"Kalendářně neexistující datum u stanice '{st_id}', obor '{track_id}': {d_val}")
 
-    if not any("datum" in e or "datum" in e.lower() for e in errors):
+    if not any(("datum" in e or "formát data" in e) for e in errors):
         log_pass("Všechna data termínů mají platný formát YYYY-MM-DD.")
 
     # 5. Parsování a validace data/map-data.js
@@ -129,7 +129,7 @@ def validate():
             errors.append(f"Nalezeno pouze {len(found_repos)} repozitářů, očekáváno min. 8.")
         else:
             for r in found_repos:
-                if not re.match(r'^[A-Za-z0-9_.-]+$', r):
+                if not re.match(r'^[A-Za-z0-9][A-Za-z0-9_.-]*$', r) or ".." in r:
                     errors.append(f"Neplatný název repozitáře: {r}")
             log_pass(f"Všechny názvy repozitářů ({len(found_repos)}) jsou platné a odpovídají vzoru https://github.com/Vt002/<repo>.")
 

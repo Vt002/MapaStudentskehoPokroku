@@ -8,6 +8,45 @@
 
   var SCHEMA_VERSION = 2;
 
+  var STATUS_VALUES = ['not_started', 'working', 'done', 'help'];
+  var SELF_ASSESSMENT_VALUES = ['none', 'certain', 'with_help', 'unclear'];
+  var TRACK_VALUES = ['ALL', 'A', 'E', 'S'];
+  var THEME_VALUES = ['minimal-light', 'minimal-dark', 'cyberpunk', 'scifi', 'steampunk'];
+  var DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
+  var ISO_DATETIME_REGEX = /^\d{4}-\d{2}-\d{2}(T.*)?$/;
+
+  function sanitizeString(value, maxLength) {
+    if (typeof value !== 'string') return '';
+    return value.slice(0, maxLength);
+  }
+
+  function sanitizeStationRecord(rec) {
+    if (!rec || typeof rec !== 'object') return null;
+    var clean = {
+      status: STATUS_VALUES.indexOf(rec.status) !== -1 ? rec.status : 'not_started',
+      selfAssessment: SELF_ASSESSMENT_VALUES.indexOf(rec.selfAssessment) !== -1 ? rec.selfAssessment : 'none',
+      nextStep: sanitizeString(rec.nextStep, 5000),
+      notes: sanitizeString(rec.notes, 10000),
+      completedAt: (typeof rec.completedAt === 'string' && DATE_REGEX.test(rec.completedAt)) ? rec.completedAt : null,
+      updatedAt: (typeof rec.updatedAt === 'string' && ISO_DATETIME_REGEX.test(rec.updatedAt)) ? rec.updatedAt : new Date().toISOString(),
+      tasks: {}
+    };
+    if (rec.tasks && typeof rec.tasks === 'object') {
+      for (var tId in rec.tasks) {
+        if (!Object.prototype.hasOwnProperty.call(rec.tasks, tId)) continue;
+        var t = rec.tasks[tId];
+        if (!t || typeof t !== 'object') continue;
+        clean.tasks[tId] = {
+          done: !!t.done,
+          date: (typeof t.date === 'string' && DATE_REGEX.test(t.date)) ? t.date : '',
+          grade: sanitizeString(t.grade, 24),
+          comment: sanitizeString(t.comment, 10000)
+        };
+      }
+    }
+    return clean;
+  }
+
   function getStorageKey() {
     var path = (typeof window !== 'undefined' && window.location && window.location.pathname) || '/';
     return 'msp:v1:' + path;
@@ -130,8 +169,15 @@
       var state = this.load();
       var station = state.stations[stationId];
       if (!station) {
-        this.getStation(stationId);
-        state = this.load();
+        state.stations[stationId] = {
+          status: 'not_started',
+          selfAssessment: 'none',
+          nextStep: '',
+          notes: '',
+          completedAt: null,
+          updatedAt: new Date().toISOString(),
+          tasks: {}
+        };
         station = state.stations[stationId];
       }
       if (!station.tasks) station.tasks = {};
@@ -179,7 +225,8 @@
         if (imported.stations && typeof imported.stations === 'object') {
           for (var id in imported.stations) {
             if (!Object.prototype.hasOwnProperty.call(imported.stations, id)) continue;
-            var impSt = imported.stations[id];
+            var impSt = sanitizeStationRecord(imported.stations[id]);
+            if (!impSt) continue;
             var curSt = current.stations[id];
             if (!curSt) {
               current.stations[id] = impSt;
@@ -193,10 +240,13 @@
           }
         }
 
-        if (imported.selectedTrack) current.selectedTrack = imported.selectedTrack;
-        if (imported.manualCurrentStationId) current.manualCurrentStationId = imported.manualCurrentStationId;
-        if (imported.theme) {
-          current.theme = imported.theme === 'scifi-rpg' ? 'scifi' : imported.theme;
+        if (TRACK_VALUES.indexOf(imported.selectedTrack) !== -1) current.selectedTrack = imported.selectedTrack;
+        if (TRACK_VALUES.indexOf(imported.manualCurrentStationId) === -1 && imported.manualCurrentStationId) {
+          current.manualCurrentStationId = sanitizeString(imported.manualCurrentStationId, 64);
+        }
+        var importedTheme = imported.theme === 'scifi-rpg' ? 'scifi' : imported.theme;
+        if (THEME_VALUES.indexOf(importedTheme) !== -1) {
+          current.theme = importedTheme;
         }
 
         this.save(current);
